@@ -1,2 +1,5 @@
 # the_explorer_capstone
- Captstone project
+ Capstone project
+Developer
+1. Virat Contractor
+2. Chintan Patel
