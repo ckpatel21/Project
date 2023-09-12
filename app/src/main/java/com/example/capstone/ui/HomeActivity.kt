@@ -1,9 +1,9 @@
-package com.example.capstone
+package com.example.capstone.ui
 
 import android.os.Bundle
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.capstone.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
@@ -14,9 +14,6 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        /*val textView = findViewById<TextView>(R.id.textView)
-        val email = intent.getStringExtra("Email")
-        textView.text = email*/
         loadFragment(MapsFragment())
         bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
         bottomNav.setOnItemSelectedListener {
@@ -25,15 +22,10 @@ class HomeActivity : AppCompatActivity() {
                     loadFragment(MapsFragment())
                     true
                 }
-                R.id.message -> {
-                 //adFragment(ChatFragment())
+                R.id.profile -> {
+                    loadFragment(ProfileFragment())
                     true
                 }
-                R.id.settings -> {
-                  //loadFragment(SettingFragment())
-                    true
-                }
-
                 else -> {
                     false
                 }

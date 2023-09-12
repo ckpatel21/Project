@@ -1,4 +1,4 @@
-package com.example.capstone
+package com.example.capstone.utils
 
 class Constant {
     companion object {

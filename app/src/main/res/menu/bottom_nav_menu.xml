@@ -3,13 +3,10 @@
     <item
         android:id="@+id/home"
         android:icon="@drawable/ic_launcher_background"
-        android:title="Home"  />
+        android:title="@string/home"  />
     <item
-        android:id="@+id/message"
+        android:id="@+id/profile"
         android:icon="@drawable/common_full_open_on_phone"
-        android:title="Message" />
-    <item
-        android:id="@+id/settings"
-        android:icon="@drawable/common_full_open_on_phone"
-        android:title="Setting" />
+        android:title="@string/profile" />
+
 </menu>

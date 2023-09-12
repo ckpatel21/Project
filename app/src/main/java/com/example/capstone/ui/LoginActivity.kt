@@ -1,4 +1,4 @@
-package com.example.capstone
+package com.example.capstone.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -9,6 +9,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.capstone.R
+import com.example.capstone.viewModel.LoginActivityViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -19,16 +21,18 @@ class LoginActivity : AppCompatActivity() {
 
     var mAuth = FirebaseAuth.getInstance()
 
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestIdToken(getString(R.string.default_web_client_id))
+        .requestEmail()
+        .build()
+
+    val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+
+    val viewModel: LoginActivityViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-
-        val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
         findViewById<View>(R.id.google_sign_in_button).setOnClickListener {
             val signInIntent = mGoogleSignInClient.signInIntent
