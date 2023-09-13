@@ -1,6 +1,7 @@
 package com.example.capstone.ui
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.capstone.R
+import com.example.capstone.utils.Constant.Companion.LOGIN_CREDENTIAL
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -73,8 +75,12 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
+                    var sharedPreference =  this.getSharedPreferences(LOGIN_CREDENTIAL, Context.MODE_PRIVATE)
                     val user = mAuth.currentUser
                     val email = user?.email.toString()
+                    val editor = sharedPreference.edit()
+                    editor.putString("email",email)
+                    editor.apply()
                     val intent = Intent(this@LoginActivity, HomeActivity::class.java)
                     //intent.putExtra("Email",email)
                     startActivity(intent)
