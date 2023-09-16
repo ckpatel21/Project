@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.capstone.R
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -14,13 +15,11 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class MapsFragment : Fragment() {
-
-    val database = Firebase.database
-    val myRef = database.getReference("message")
 
     private val callback = OnMapReadyCallback { mMap ->
 
@@ -33,6 +32,7 @@ class MapsFragment : Fragment() {
         )
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 16.0f))
+/*
 
         mMap.addMarker(
             MarkerOptions()
@@ -48,6 +48,7 @@ class MapsFragment : Fragment() {
             }
             true // return value of onMarkerClick function
         }
+*/
 
     }
 
@@ -63,5 +64,15 @@ class MapsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
+
+        //(activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        /*val fab = requireActivity().findViewById<FloatingActionButton>(R.id.floatingActionButton)
+        fab.setOnClickListener {
+            childFragmentManager.beginTransaction()
+                .replace(R.id.fragment_mapss, AddPlaceFragment())
+                .addToBackStack(tag)
+
+                .commit()
+        }*/
     }
 }

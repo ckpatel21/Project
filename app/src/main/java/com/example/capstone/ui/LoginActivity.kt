@@ -75,14 +75,20 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    var sharedPreference =  this.getSharedPreferences(LOGIN_CREDENTIAL, Context.MODE_PRIVATE)
                     val user = mAuth.currentUser
                     val email = user?.email.toString()
+                    val name = user?.displayName.toString()
+
+                    //Shared preference
+                    val sharedPreference =  getSharedPreferences(LOGIN_CREDENTIAL, Context.MODE_PRIVATE)
                     val editor = sharedPreference.edit()
                     editor.putString("email",email)
                     editor.apply()
+
+                    //Send data
                     val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                    //intent.putExtra("Email",email)
+                    intent.putExtra("Email",email)
+                    intent.putExtra("Name",name)
                     startActivity(intent)
                     //updateUI(user)
                 } else {

@@ -2,11 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/home"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@color/common_google_signin_btn_text_dark"
         android:title="@string/home"  />
     <item
         android:id="@+id/profile"
-        android:icon="@drawable/common_full_open_on_phone"
+        android:icon="@color/common_google_signin_btn_text_dark"
         android:title="@string/profile" />
-
+    <item
+        android:id="@+id/add"
+        android:icon="@color/common_google_signin_btn_text_dark"
+        android:title="@string/addPlace" />
 </menu>

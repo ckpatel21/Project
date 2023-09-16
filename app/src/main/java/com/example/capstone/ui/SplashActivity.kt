@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.widget.Toast
 import com.example.capstone.R
 import com.example.capstone.utils.Constant.Companion.LOGIN_CREDENTIAL
 
