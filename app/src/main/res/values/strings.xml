@@ -4,9 +4,10 @@
     <string name="profile">Profile</string>
     <string name="home">Home</string>
     <string name="logout">Logout</string>
-    <string name="addPlace">Add Place</string>
-    <string name="placeName">Place name</string>
-    <string name="placeDescription">Place Description</string>
+    <string name="add_place">Add Place</string>
+    <string name="place_name">Place name</string>
+    <string name="place_description">Place Description</string>
     <string name="submit">Submit</string>
+    <string name="add_pictures">Add Pictures</string>
 
 </resources>

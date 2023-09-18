@@ -59,6 +59,9 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.2.3"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-database-ktx")
+    // Add the dependency for the Cloud Storage library
+    implementation("com.google.firebase:firebase-storage-ktx")
+
     //Maps
     implementation ("com.google.android.gms:play-services-maps:18.1.0")
 

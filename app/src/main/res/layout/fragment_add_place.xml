@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/_24sp"
-            android:text="@string/addPlace" />
+            android:text="@string/add_place" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="text"
-                    android:hint="@string/placeName" />
+                    android:hint="@string/place_name" />
                 <EditText
                     android:id="@+id/etPlaceDescription"
                     android:layout_width="match_parent"
@@ -50,7 +50,14 @@
                     android:inputType="text"
                     android:lines="4"
                     android:maxLines="4"
-                    android:hint="@string/placeDescription" />
+                    android:hint="@string/place_description" />
+
+                <ImageButton
+                    android:id="@+id/btnUpload"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/upload"
+                    android:contentDescription="@string/add_pictures" />
 
                 <Button
                     android:id="@+id/btnSubmit"
