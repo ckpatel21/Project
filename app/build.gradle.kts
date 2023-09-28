@@ -50,6 +50,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx:22.1.2")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("androidx.fragment:fragment-ktx:1.6.1")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

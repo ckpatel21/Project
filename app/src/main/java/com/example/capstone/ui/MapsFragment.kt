@@ -3,54 +3,52 @@ package com.example.capstone.ui
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
 import com.example.capstone.R
-
+import com.example.capstone.model.Place
+import com.example.capstone.model.Response
 import com.google.android.gms.maps.CameraUpdateFactory
+
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class MapsFragment : Fragment() {
 
+    //Firebase initialization
+    val database = Firebase.database
+    val myRef = database.getReference("capstone")
+
+    val mutableLiveData = MutableLiveData<Response>()
+
     private val callback = OnMapReadyCallback { mMap ->
 
-        // Add a marker in Sydney and move the camera
-        val current = LatLng(43.450120, -80.516240)
-        mMap.addMarker(
-            MarkerOptions()
-                .position(current)
-                .title("Current location")
-        )
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 16.0f))
-/*
+        for(i in 0 until mutableLiveData.value?.list!!.size){
+            val markerData = mutableLiveData.value?.list!![i] // Replace with your marker data
 
-        mMap.addMarker(
-            MarkerOptions()
-                .position(LatLng(43.452969,-80.495064))
-                .title("Kitchener"),
-        )
-        mMap.setOnMarkerClickListener {
-            // code inside onMarkerClick function
-            if(it.title == "Current location"){
-                Toast.makeText(requireActivity(),"Current loc", Toast.LENGTH_LONG).show()
-            }else if(it.title == "Kitchener"){
-                Toast.makeText(requireActivity(),"Kitchener", Toast.LENGTH_LONG).show()
-            }
-            true // return value of onMarkerClick function
-        }
-*/
+            val markerOptions = MarkerOptions()
+                .position(LatLng(markerData.latitude!!, markerData.longitude!!))
+                .title(markerData.placeName)
+                .snippet(markerData.placeDescription)
+
+            mMap.addMarker(markerOptions)
+    }
+
+        //mMap.moveCamera(CameraUpdateFactory.new( 16.0f))
+
 
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,8 +60,8 @@ class MapsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(callback)
+
+        getResponseFromRealtimeDatabaseUsingLiveData()
 
         //(activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         /*val fab = requireActivity().findViewById<FloatingActionButton>(R.id.floatingActionButton)
@@ -74,5 +72,27 @@ class MapsFragment : Fragment() {
 
                 .commit()
         }*/
+    }
+
+    private fun getResponseFromRealtimeDatabaseUsingLiveData() : MutableLiveData<Response> {
+
+        myRef.child("places").get().addOnCompleteListener { task ->
+            val response = Response()
+            if (task.isSuccessful) {
+                val result = task.result
+                result?.let {
+                    response.list = result.children.map { snapShot ->
+                        snapShot.getValue(Place::class.java)!!
+                    }
+                }
+            } else {
+                response.exception = task.exception
+            }
+            mutableLiveData.value = response
+            val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+            mapFragment?.getMapAsync(callback)
+
+        }
+        return mutableLiveData
     }
 }
