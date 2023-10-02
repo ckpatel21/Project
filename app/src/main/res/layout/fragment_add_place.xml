@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".ui.AddPlaceFragment">
 
+
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="@dimen/_0dp"
@@ -22,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/_24sp"
-            android:text="@string/add_place" />
+            android:text="@string/place" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -64,7 +66,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/submit" />
-
+                <androidx.camera.view.PreviewView
+                    android:id="@+id/viewFinder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

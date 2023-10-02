@@ -30,6 +30,10 @@ class HomeActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {
+                    loadFragment(HomeFragment())
+                    true
+                }
+                R.id.map -> {
                     loadFragment(MapsFragment())
                     true
                 }
@@ -37,8 +41,12 @@ class HomeActivity : AppCompatActivity() {
                     loadFragment(ProfileFragment())
                     true
                 }
-                R.id.add -> {
+                R.id.place -> {
                     loadFragment(AddPlaceFragment())
+                    true
+                }
+                R.id.event -> {
+                    loadFragment(AddEventFragment())
                     true
                 }
                 else -> {
