@@ -26,7 +26,8 @@ class HomeActivity : AppCompatActivity() {
         Log.d("Name",name.toString())
 
         loadFragment(MapsFragment())
-        bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        bottomNav = findViewById(R.id.bottomNav)
+        bottomNav.itemIconTintList = null
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {

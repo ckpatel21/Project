@@ -4,8 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.*
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.location.Location
 import android.location.LocationManager
 import android.os.Build
@@ -19,28 +17,22 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import com.example.capstone.R
 import com.example.capstone.model.*
-import com.example.capstone.utils.Constant
 import com.google.android.gms.location.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
-import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
@@ -49,8 +41,9 @@ import java.util.concurrent.Executors
 class AddPlaceFragment : Fragment() {
 
     //Firebase initialization
-    val database = Firebase.database
-    val myRef = database.getReference("capstone")
+    private val firebaseDatabase = Firebase.database
+    private val databaseReference = firebaseDatabase.getReference("capstone")
+
     val storageRef = Firebase.storage.getReference("capstone")
     private var imageCapture: ImageCapture? = null
     //Get location
@@ -94,7 +87,7 @@ class AddPlaceFragment : Fragment() {
             requestPermissions()
         }
         cameraExecutor = Executors.newSingleThreadExecutor()
-        val key = myRef.child("places").push()
+        val key = databaseReference.child("places").push()
 
         uploadBtn.setOnClickListener {
 
@@ -107,13 +100,12 @@ class AddPlaceFragment : Fragment() {
 
             takePhoto()
             //Adding values in Firebase
-            key.child("user").setValue("Email")
+            key.child("addedBy").setValue("Email")
             key.child("placeName").setValue(placeName)
             key.child("placeDescription").setValue(placeDescription)
             key.child("latitude").setValue(latitude)
             key.child("longitude").setValue(longitude)
-            key.child("radius").setValue(Constant.radius)
-            key.child("points").setValue(1)
+            key.child("status").setValue(true)
 
 
             //picture
@@ -216,7 +208,7 @@ class AddPlaceFragment : Fragment() {
     //Fetch Values from Firebase
     private fun getResponseFromRealtimeDatabaseUsingLiveData() : MutableLiveData<Response> {
         val mutableLiveData = MutableLiveData<Response>()
-        myRef.child("places").get().addOnCompleteListener { task ->
+        databaseReference.child("places").get().addOnCompleteListener { task ->
             val response = Response()
             if (task.isSuccessful) {
                 val result = task.result

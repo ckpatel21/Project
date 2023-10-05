@@ -63,6 +63,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.2.3"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-database-ktx")
+    implementation("com.google.android.material:material:1.9.0")
     // Add the dependency for the Cloud Storage library
     implementation("com.google.firebase:firebase-storage-ktx")
 
