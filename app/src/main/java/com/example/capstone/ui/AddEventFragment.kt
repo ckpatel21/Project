@@ -2,7 +2,6 @@ package com.example.capstone.ui
 
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,12 +59,12 @@ class AddEventFragment : Fragment() {
 
         val startDateTv = view.findViewById<TextView>(R.id.tvStartDate)
         val endDateTv = view.findViewById<TextView>(R.id.tvEndDate)
-        val tvTime = view.findViewById<TextView>(R.id.tvTime)
+        val timeTv = view.findViewById<TextView>(R.id.tvTime)
 
         val eventNameEt = view.findViewById<EditText>(R.id.etEventName)
         val eventDescriptionEt = view.findViewById<EditText>(R.id.etEventDescription)
 
-        tvTime.setOnClickListener {
+        timeTv.setOnClickListener {
             activity?.supportFragmentManager?.let {timePicker.show(it,"time") }
         }
         startDateTv.setOnClickListener {
@@ -78,15 +77,18 @@ class AddEventFragment : Fragment() {
             val date = Date(it)
             val dateFormat: java.text.DateFormat? = DateFormat.getDateFormat(view.context)
             startDate = dateFormat?.format(date).toString()
+            startDateTv.text = startDate
         }
         endDatePicker.addOnPositiveButtonClickListener {
             val date = Date(it)
             val dateFormat: java.text.DateFormat? = DateFormat.getDateFormat(view.context)
             endDate = dateFormat?.format(date).toString()
+            endDateTv.text = endDate
         }
 
         timePicker.addOnPositiveButtonClickListener {
             time = "${timePicker.hour}:${timePicker.minute}"
+            timeTv.text = time
         }
 
         val submit = view.findViewById<Button>(R.id.btnSubmit)
