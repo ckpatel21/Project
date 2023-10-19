@@ -11,7 +11,7 @@ import com.google.firebase.auth.AuthResult
 
 class HomeActivity : AppCompatActivity() {
 
-    lateinit var bottomNav : BottomNavigationView
+    private lateinit var bottomNav : BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,10 +25,13 @@ class HomeActivity : AppCompatActivity() {
         Log.d("Email",email.toString())
         Log.d("Name",name.toString())
 
-        loadFragment(MapsFragment())
+        //Default Fragment as Home
+        loadFragment(HomeFragment())
+
         bottomNav = findViewById(R.id.bottomNav)
         bottomNav.itemIconTintList = null
         bottomNav.setOnItemSelectedListener {
+
             when (it.itemId) {
                 R.id.home -> {
                     loadFragment(HomeFragment())

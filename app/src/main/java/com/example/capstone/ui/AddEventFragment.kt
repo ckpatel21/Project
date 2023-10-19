@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.capstone.R
+import com.example.capstone.utils.Constant
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -19,10 +20,6 @@ import java.util.Date
 
 
 class AddEventFragment : Fragment() {
-
-    //Firebase initialization
-    private val firebaseDatabase = Firebase.database
-    private val databaseReference = firebaseDatabase.getReference("capstone")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +91,7 @@ class AddEventFragment : Fragment() {
         val submit = view.findViewById<Button>(R.id.btnSubmit)
 
         //Adding Key
-        val key = databaseReference.child("events").push()
+        val key = Constant.databaseReference.child("events").push()
 
         submit.setOnClickListener {
             val eventName = eventNameEt.text.toString()

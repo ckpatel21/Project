@@ -1,11 +1,15 @@
 package com.example.capstone.ui
 
 import android.Manifest
+import android.R.attr
 import android.annotation.SuppressLint
 import android.content.*
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.location.Location
 import android.location.LocationManager
+import android.media.Image
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,42 +20,46 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.Toast
-import androidx.camera.core.CameraSelector
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.Preview
-import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import com.example.capstone.R
 import com.example.capstone.model.*
+import com.example.capstone.utils.Constant
 import com.google.android.gms.location.*
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import java.text.SimpleDateFormat
 import java.util.Locale
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
+import java.util.UUID
+
 
 class AddPlaceFragment : Fragment() {
 
-    //Firebase initialization
-    private val firebaseDatabase = Firebase.database
-    private val databaseReference = firebaseDatabase.getReference("capstone")
 
-    val storageRef = Firebase.storage.getReference("capstone")
+    private var firebaseStore: FirebaseStorage? = null
+    private var storageReference: StorageReference? = null
+
     private var imageCapture: ImageCapture? = null
     //Get location
-    val PERMISSION_ID = 42
+    private val permissionId = 42
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     var lat = 0.0
     var lng = 0.0
 
+    private lateinit var keyValue : DatabaseReference
+    data class Image(val uri : Uri)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,35 +71,34 @@ class AddPlaceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //
+        firebaseStore = FirebaseStorage.getInstance()
+        storageReference = FirebaseStorage.getInstance().reference
+
         //Fetch Data
         getResponseFromRealtimeDatabaseUsingLiveData()
 
         //Variable Declaration
         val submitBtn = view.findViewById<Button>(R.id.btnSubmit)
-        val uploadBtn = view.findViewById<ImageButton>(R.id.btnUpload)
         val placeNameEt = view.findViewById<EditText>(R.id.etPlaceName)
         val placeDescriptionEt = view.findViewById<EditText>(R.id.etPlaceDescription)
 
-        var imageCapture: ImageCapture? = null
+        val uploadPictureBtn = view.findViewById<ImageView>(R.id.imageBtnUploadPhoto)
+        val takePictureBtn = view.findViewById<ImageView>(R.id.imageBtnTakePhoto)
 
-        lateinit var cameraExecutor: ExecutorService
         //Get location
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         getLastLocation()
 
-        //Category
-        //Pictures
-        if (allPermissionsGranted()) {
-            startCamera()
-        } else {
-            requestPermissions()
+        val key = Constant.databaseReference.child("places").push()
+        keyValue = key
+        //TODO
+        //Add Category
+        //Select picture
+        uploadPictureBtn.setOnClickListener {
+            getContent.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
         }
-        cameraExecutor = Executors.newSingleThreadExecutor()
-        val key = databaseReference.child("places").push()
 
-        uploadBtn.setOnClickListener {
-
-        }
         submitBtn.setOnClickListener {
             val placeName = placeNameEt.text.toString()
             val placeDescription = placeDescriptionEt.text.toString()
@@ -108,7 +115,7 @@ class AddPlaceFragment : Fragment() {
             key.child("status").setValue(true)
 
 
-            //picture
+
             /*val mountainImagesRef = storageRef.child("upload.png")
             val imageView = view.findViewById<ImageView>(R.id.image)
 
@@ -129,41 +136,26 @@ class AddPlaceFragment : Fragment() {
         }
     }
 
+    //Get pictures
+
+    private val getContent = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(3)) { pictureUri : List<Uri> ->
+
+        Log.d("Tag","Called")
+
+        val ref = storageReference?.child("myImages/" + UUID.randomUUID().toString())
+        val uploadTask = ref?.putFile(pictureUri[0]!!)
+
+        //for(i in pictureUri.indices){
+           // storageRef.child("placeName${pictureUri.first()}").putFile(pictureUri.first())
+        //}
+
+    }
+
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(
             requireActivity(), it) == PackageManager.PERMISSION_GRANTED
     }
-    private fun startCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireActivity())
 
-        cameraProviderFuture.addListener({
-            // Used to bind the lifecycle of cameras to the lifecycle owner
-            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
-
-            // Preview
-            val preview = Preview.Builder()
-                .build()
-                .also {
-                   //it.setSurfaceProvider(.surfaceProvider)
-                }
-
-            // Select back camera as a default
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-            try {
-                // Unbind use cases before rebinding
-                cameraProvider.unbindAll()
-
-                // Bind use cases to camera
-                cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview)
-
-            } catch(exc: Exception) {
-                Log.e(TAG, "Use case binding failed", exc)
-            }
-
-        }, ContextCompat.getMainExecutor(requireActivity()))
-    }
     private fun takePhoto() {
         // Get a stable reference of the modifiable image capture use case
         val imageCapture = imageCapture ?: return
@@ -208,7 +200,7 @@ class AddPlaceFragment : Fragment() {
     //Fetch Values from Firebase
     private fun getResponseFromRealtimeDatabaseUsingLiveData() : MutableLiveData<Response> {
         val mutableLiveData = MutableLiveData<Response>()
-        databaseReference.child("places").get().addOnCompleteListener { task ->
+        Constant.databaseReference.child("places").get().addOnCompleteListener { task ->
             val response = Response()
             if (task.isSuccessful) {
                 val result = task.result
@@ -261,7 +253,7 @@ class AddPlaceFragment : Fragment() {
         ActivityCompat.requestPermissions(
             requireActivity(),
             arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
-            PERMISSION_ID
+            permissionId
         )
     }
     private fun isLocationEnabled(): Boolean {

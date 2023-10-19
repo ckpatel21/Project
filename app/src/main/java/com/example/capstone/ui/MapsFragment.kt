@@ -33,7 +33,7 @@ class MapsFragment : Fragment() {
     private val callback = OnMapReadyCallback { mMap ->
 
 
-        for(i in 0 until mutableLiveData.value?.list!!.size){
+       /* for(i in 0 until mutableLiveData.value?.list!!.size){
             val markerData = mutableLiveData.value?.list!![i] // Replace with your marker data
 
             val markerOptions = MarkerOptions()
@@ -42,7 +42,7 @@ class MapsFragment : Fragment() {
                 .snippet(markerData.placeDescription)
 
             mMap.addMarker(markerOptions)
-    }
+    }*/
 
         //mMap.moveCamera(CameraUpdateFactory.new( 16.0f))
 

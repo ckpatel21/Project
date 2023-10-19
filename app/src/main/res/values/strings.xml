@@ -17,5 +17,9 @@
     <string name="end_date">End Date</string>
     <string name="time">Time\n</string>
     <string name="hello_blank_fragment">test</string>
+    <string name="btnAddEvent">Add Event</string>
+    <string name="btnAddPlace">Add Place</string>
+    <string name="txtAddPictures">Add Your Memories or Pictures</string>
+    <string name="txtOr">OR</string>
 
 </resources>
