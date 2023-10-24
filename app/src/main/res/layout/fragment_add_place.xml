@@ -81,6 +81,8 @@
                        android:textSize="@dimen/_20sp"
                        android:text="@string/txtAddPictures" />
 
+
+
                    <LinearLayout
                        android:layout_width="match_parent"
                        android:layout_height="wrap_content"
@@ -109,6 +111,20 @@
                            android:layout_height="wrap_content"
                            android:layout_weight="1"
                            android:src="@drawable/take_photo" />
+                   </LinearLayout>
+                   <LinearLayout
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:orientation="horizontal">
+
+
+                       <GridView
+                           android:id="@+id/gridPictures"
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:numColumns="1"
+                           android:layout_weight="1" />
+
                    </LinearLayout>
                </LinearLayout>
                <Button

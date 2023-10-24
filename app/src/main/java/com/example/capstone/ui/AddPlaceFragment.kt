@@ -20,6 +20,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.GridView
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
@@ -30,6 +31,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import com.example.capstone.PlacePictureAdapter
 import com.example.capstone.R
 import com.example.capstone.model.*
 import com.example.capstone.utils.Constant
@@ -51,7 +53,6 @@ class AddPlaceFragment : Fragment() {
     private var firebaseStore: FirebaseStorage? = null
     private var storageReference: StorageReference? = null
 
-    private var imageCapture: ImageCapture? = null
     //Get location
     private val permissionId = 42
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -86,6 +87,7 @@ class AddPlaceFragment : Fragment() {
         val uploadPictureBtn = view.findViewById<ImageView>(R.id.imageBtnUploadPhoto)
         val takePictureBtn = view.findViewById<ImageView>(R.id.imageBtnTakePhoto)
 
+
         //Get location
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         getLastLocation()
@@ -105,7 +107,6 @@ class AddPlaceFragment : Fragment() {
             val latitude = lat
             val longitude = lng
 
-            takePhoto()
             //Adding values in Firebase
             key.child("addedBy").setValue("Email")
             key.child("placeName").setValue(placeName)
@@ -140,14 +141,26 @@ class AddPlaceFragment : Fragment() {
 
     private val getContent = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(3)) { pictureUri : List<Uri> ->
 
-        Log.d("Tag","Called")
+            displayPictures(pictureUri);
 
-        val ref = storageReference?.child("myImages/" + UUID.randomUUID().toString())
-        val uploadTask = ref?.putFile(pictureUri[0]!!)
-
-        //for(i in pictureUri.indices){
+        val ref = storageReference?.child("places")?.child(keyValue.key.toString())
+        for(i in pictureUri.indices){
            // storageRef.child("placeName${pictureUri.first()}").putFile(pictureUri.first())
-        //}
+            val uploadTask = ref?.child(i.toString())?.putFile(pictureUri[i])
+
+        }
+
+    }
+
+    private fun displayPictures(pictureUri: List<Uri>) {
+
+
+        val adapter = PlacePictureAdapter(courseList = pictureUri, requireActivity())
+
+        val gridView = view?.findViewById<GridView>(R.id.gridPictures)
+
+        gridView?.adapter =adapter
+
 
     }
 
@@ -156,47 +169,6 @@ class AddPlaceFragment : Fragment() {
             requireActivity(), it) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun takePhoto() {
-        // Get a stable reference of the modifiable image capture use case
-        val imageCapture = imageCapture ?: return
-
-        // Create time stamped name and MediaStore entry.
-        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
-            .format(System.currentTimeMillis())
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
-            }
-        }
-
-        // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(requireActivity().contentResolver,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues)
-            .build()
-
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
-        imageCapture.takePicture(
-            outputOptions,
-            ContextCompat.getMainExecutor(requireActivity()),
-            object : ImageCapture.OnImageSavedCallback {
-                override fun onError(exc: ImageCaptureException) {
-                    Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
-                }
-
-                override fun
-                        onImageSaved(output: ImageCapture.OutputFileResults){
-                    val msg = "Photo capture succeeded: ${output.savedUri}"
-                    Toast.makeText(requireActivity(), msg, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, msg)
-                }
-            }
-        )
-    }
     //Fetch Values from Firebase
     private fun getResponseFromRealtimeDatabaseUsingLiveData() : MutableLiveData<Response> {
         val mutableLiveData = MutableLiveData<Response>()
