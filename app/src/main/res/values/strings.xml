@@ -21,5 +21,6 @@
     <string name="btnAddPlace">Add Place</string>
     <string name="txtAddPictures">Add Your Memories or Pictures</string>
     <string name="txtOr">OR</string>
+    <string name="txtSelectCategory">Select Category</string>
 
 </resources>

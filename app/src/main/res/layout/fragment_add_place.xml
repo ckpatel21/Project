@@ -37,21 +37,22 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:orientation="vertical">
+
                <LinearLayout
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:layout_margin="@dimen/_5dp"
-                   android:padding="@dimen/_10dp"
-                   android:orientation="vertical">
+                   android:orientation="vertical"
+                   android:padding="@dimen/_10dp">
 
                    <EditText
                        android:id="@+id/etPlaceName"
                        android:layout_width="match_parent"
                        android:layout_height="wrap_content"
                        android:ems="10"
-                       android:textSize="@dimen/_16sp"
                        android:hint="@string/place_name"
-                       android:inputType="text" />
+                       android:inputType="text"
+                       android:textSize="@dimen/_16sp" />
 
                    <EditText
                        android:id="@+id/etPlaceDescription"
@@ -60,15 +61,53 @@
                        android:ems="10"
                        android:hint="@string/place_description"
                        android:inputType="text"
-                       android:textSize="@dimen/_16sp"
                        android:lines="4"
-                       android:maxLines="4" />
+                       android:maxLines="4"
+                       android:textSize="@dimen/_16sp" />
 
 
                </LinearLayout>
+
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:layout_margin="@dimen/_5dp"
+                   android:orientation="vertical"
+                   android:padding="@dimen/_10dp">
+
+                   <com.google.android.material.textview.MaterialTextView
+                       android:id="@+id/textView3"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:textFontWeight="900"
+                       android:textSize="@dimen/_20sp"
+                       android:text="@string/txtSelectCategory"/>
+
+                   <com.google.android.material.textfield.TextInputLayout
+                       android:id="@+id/categorySpinner"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+                       <AutoCompleteTextView
+                           android:id="@+id/categoryDropdown"
+                           android:layout_width="match_parent"
+                           android:layout_height="match_parent"
+                           android:inputType="none"
+                           android:ellipsize="end"
+                           android:maxLines="1"
+                           android:paddingTop="10dp"
+                           android:paddingBottom="10dp"
+                           android:singleLine="true"
+                           android:text="All Types"
+                           android:textAlignment="center"
+                           tools:ignore="LabelFor" />
+                   </com.google.android.material.textfield.TextInputLayout>
+               </LinearLayout>
+
                <LinearLayout
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
+                   android:layout_weight="1"
                    android:orientation="vertical">
 
                    <TextView
@@ -127,7 +166,7 @@
 
                    </LinearLayout>
                </LinearLayout>
-               <Button
+               <com.google.android.material.button.MaterialButton
                    android:id="@+id/btnSubmit"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"

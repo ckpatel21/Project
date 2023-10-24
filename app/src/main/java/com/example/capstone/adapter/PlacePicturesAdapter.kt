@@ -1,4 +1,4 @@
-package com.example.capstone
+package com.example.capstone.adapter
 
 import android.content.Context
 import android.net.Uri
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
+import com.example.capstone.R
 
 data class GridViewModal(
     // we are creating a modal class with 2 member
@@ -43,7 +44,7 @@ internal class PlacePictureAdapter(
     }
 
     // in below function we are getting individual item of grid view.
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var convertView = convertView
         // on blow line we are checking if layout inflater
         // is null, if it is null we are initializing it.
@@ -56,7 +57,7 @@ internal class PlacePictureAdapter(
         if (convertView == null) {
             // on below line we are passing the layout file
             // which we have to inflate for each item of grid view.
-            convertView = layoutInflater!!.inflate(R.layout.picture_layout, null)
+            convertView = layoutInflater!!.inflate(R.layout.layout_picture, null)
         }
         // on below line we are initializing our course image view
         // and course text view with their ids.

@@ -1,23 +1,22 @@
 package com.example.capstone.ui
 
 import android.Manifest
-import android.R.attr
 import android.annotation.SuppressLint
 import android.content.*
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.location.Location
 import android.location.LocationManager
-import android.media.Image
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.GridView
@@ -25,26 +24,19 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
 import androidx.core.app.ActivityCompat
 import androidx.core.content.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
-import com.example.capstone.PlacePictureAdapter
+import com.example.capstone.adapter.PlacePictureAdapter
 import com.example.capstone.R
 import com.example.capstone.model.*
 import com.example.capstone.utils.Constant
 import com.google.android.gms.location.*
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.ktx.storage
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.UUID
 
 
 class AddPlaceFragment : Fragment() {
@@ -87,7 +79,8 @@ class AddPlaceFragment : Fragment() {
         val uploadPictureBtn = view.findViewById<ImageView>(R.id.imageBtnUploadPhoto)
         val takePictureBtn = view.findViewById<ImageView>(R.id.imageBtnTakePhoto)
 
-
+        val categoryList = view.findViewById<AutoCompleteTextView>(R.id.categoryDropdown)
+        val categorySpinner = view.findViewById<TextInputLayout>(R.id.categorySpinner)
         //Get location
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         getLastLocation()
@@ -96,6 +89,16 @@ class AddPlaceFragment : Fragment() {
         keyValue = key
         //TODO
         //Add Category
+        val adapter = ArrayAdapter(
+            requireContext(), android.R.layout.simple_spinner_dropdown_item, arrayOf("All Types", "Assignments", "Exam", "Lab")
+        )
+        categoryList.setAdapter(adapter)
+        categoryList.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, id->
+                // do something with the available information
+                val value = categoryList.text
+            }
+
         //Select picture
         uploadPictureBtn.setOnClickListener {
             getContent.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
@@ -141,7 +144,7 @@ class AddPlaceFragment : Fragment() {
 
     private val getContent = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(3)) { pictureUri : List<Uri> ->
 
-            displayPictures(pictureUri);
+            displayPictures(pictureUri)
 
         val ref = storageReference?.child("places")?.child(keyValue.key.toString())
         for(i in pictureUri.indices){
