@@ -51,6 +51,9 @@ class AddPlaceFragment : Fragment() {
     var lat = 0.0
     var lng = 0.0
 
+    //Save Category
+    var category = "Select One"
+
     private lateinit var keyValue : DatabaseReference
     data class Image(val uri : Uri)
     override fun onCreateView(
@@ -90,13 +93,14 @@ class AddPlaceFragment : Fragment() {
         //TODO
         //Add Category
         val adapter = ArrayAdapter(
-            requireContext(), android.R.layout.simple_spinner_dropdown_item, arrayOf("All Types", "Assignments", "Exam", "Lab")
+            requireContext(), android.R.layout.simple_spinner_dropdown_item, arrayOf("Park", "Trail", "Historical", "Innovative")
         )
         categoryList.setAdapter(adapter)
         categoryList.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id->
                 // do something with the available information
-                val value = categoryList.text
+                 category = categoryList.text.toString()
+
             }
 
         //Select picture
@@ -115,6 +119,7 @@ class AddPlaceFragment : Fragment() {
             key.child("placeName").setValue(placeName)
             key.child("placeDescription").setValue(placeDescription)
             key.child("latitude").setValue(latitude)
+            key.child("category").setValue(category)
             key.child("longitude").setValue(longitude)
             key.child("status").setValue(true)
 

@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.capstone.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.AuthResult
 
 
 class HomeActivity : AppCompatActivity() {
@@ -26,7 +25,7 @@ class HomeActivity : AppCompatActivity() {
         Log.d("Name",name.toString())
 
         //Default Fragment as Home
-        loadFragment(HomeFragment())
+        loadFragment(EventFragment())
 
         bottomNav = findViewById(R.id.bottomNav)
         bottomNav.itemIconTintList = null
@@ -34,7 +33,7 @@ class HomeActivity : AppCompatActivity() {
 
             when (it.itemId) {
                 R.id.home -> {
-                    loadFragment(HomeFragment())
+                    loadFragment(EventFragment())
                     true
                 }
                 R.id.map -> {

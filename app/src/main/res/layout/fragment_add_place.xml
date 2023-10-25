@@ -98,7 +98,7 @@
                            android:paddingTop="10dp"
                            android:paddingBottom="10dp"
                            android:singleLine="true"
-                           android:text="All Types"
+                           android:text="Select One"
                            android:textAlignment="center"
                            tools:ignore="LabelFor" />
                    </com.google.android.material.textfield.TextInputLayout>

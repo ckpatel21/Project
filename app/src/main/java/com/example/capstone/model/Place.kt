@@ -6,6 +6,7 @@ data class Place(
     val longitude : Double? = null,
     val placeName : String? = null,
     val placeDescription : String? = null,
+    val category : String? = null,
     val radius : Int? = null,
     val points : Int? = null
 )
