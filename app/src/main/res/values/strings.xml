@@ -22,5 +22,6 @@
     <string name="txtAddPictures">Add Your Memories or Pictures</string>
     <string name="txtOr">OR</string>
     <string name="txtSelectCategory">Select Category</string>
+    <string name="title_the_explorer">The Explorer</string>
 
 </resources>
