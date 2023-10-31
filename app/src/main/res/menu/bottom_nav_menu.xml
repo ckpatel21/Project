@@ -2,14 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/home"
-        android:icon="@color/common_google_signin_btn_text_dark"
+        android:icon="@drawable/icon_home_bottom_navigation"
         android:title="@string/home"  />
     <item
+        android:id="@+id/map"
+        android:icon="@drawable/icon_map_bottom_navigation"
+        android:title="@string/map"  />
+    <item
         android:id="@+id/profile"
-        android:icon="@color/common_google_signin_btn_text_dark"
+        android:icon="@drawable/icon_user_bottom_navigation"
         android:title="@string/profile" />
     <item
-        android:id="@+id/add"
-        android:icon="@color/common_google_signin_btn_text_dark"
-        android:title="@string/addPlace" />
+        android:id="@+id/place"
+        android:icon="@drawable/icon_place_bottom_navigation"
+        android:title="@string/place" />
+    <item
+        android:id="@+id/event"
+        android:icon="@drawable/icon_event_bottom_navigation"
+        android:title="@string/event" />
+
 </menu>

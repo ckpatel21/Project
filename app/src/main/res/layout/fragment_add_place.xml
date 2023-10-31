@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".ui.AddPlaceFragment">
 
+
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="@dimen/_0dp"
@@ -22,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/_24sp"
-            android:text="@string/addPlace" />
+            android:text="@string/place" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -31,34 +33,148 @@
             android:padding="@dimen/_10dp">
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <EditText
-                    android:id="@+id/etPlaceName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:hint="@string/placeName" />
-                <EditText
-                    android:id="@+id/etPlaceDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:lines="4"
-                    android:maxLines="4"
-                    android:hint="@string/placeDescription" />
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/btnSubmit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/submit" />
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_margin="@dimen/_5dp"
+                   android:orientation="vertical"
+                   android:padding="@dimen/_10dp">
 
-            </LinearLayout>
+                   <EditText
+                       android:id="@+id/etPlaceName"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:ems="10"
+                       android:hint="@string/place_name"
+                       android:inputType="text"
+                       android:textSize="@dimen/_16sp" />
+
+                   <EditText
+                       android:id="@+id/etPlaceDescription"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:ems="10"
+                       android:hint="@string/place_description"
+                       android:inputType="text"
+                       android:lines="4"
+                       android:maxLines="4"
+                       android:textSize="@dimen/_16sp" />
+
+
+               </LinearLayout>
+
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:layout_margin="@dimen/_5dp"
+                   android:orientation="vertical"
+                   android:padding="@dimen/_10dp">
+
+                   <com.google.android.material.textview.MaterialTextView
+                       android:id="@+id/textView3"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:textFontWeight="900"
+                       android:textSize="@dimen/_20sp"
+                       android:text="@string/txtSelectCategory"/>
+
+                   <com.google.android.material.textfield.TextInputLayout
+                       android:id="@+id/categorySpinner"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+                       <AutoCompleteTextView
+                           android:id="@+id/categoryDropdown"
+                           android:layout_width="match_parent"
+                           android:layout_height="match_parent"
+                           android:inputType="none"
+                           android:ellipsize="end"
+                           android:maxLines="1"
+                           android:paddingTop="10dp"
+                           android:paddingBottom="10dp"
+                           android:singleLine="true"
+                           android:text="Select One"
+                           android:textAlignment="center"
+                           tools:ignore="LabelFor" />
+                   </com.google.android.material.textfield.TextInputLayout>
+               </LinearLayout>
+
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1"
+                   android:orientation="vertical">
+
+                   <TextView
+                       android:id="@+id/textView2"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_margin="@dimen/_5dp"
+                       android:padding="@dimen/_10dp"
+                       android:textFontWeight="900"
+                       android:textSize="@dimen/_20sp"
+                       android:text="@string/txtAddPictures" />
+
+
+
+                   <LinearLayout
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:weightSum="3"
+                       android:padding="@dimen/_5dp"
+                       android:layout_margin="@dimen/_10dp"
+                       android:orientation="horizontal">
+
+                       <ImageView
+                           android:id="@+id/imageBtnUploadPhoto"
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:layout_weight="1"
+                           android:src="@drawable/upload_photo" />
+                       <TextView
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:text="@string/txtOr"
+                           android:layout_gravity="center"
+                           android:textAlignment="center"
+                           android:layout_weight="1"
+                           android:textSize="@dimen/_24sp"/>
+                       <ImageView
+                           android:id="@+id/imageBtnTakePhoto"
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:layout_weight="1"
+                           android:src="@drawable/take_photo" />
+                   </LinearLayout>
+
+                   <LinearLayout
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:orientation="horizontal">
+
+
+                       <GridView
+                           android:id="@+id/gridPictures"
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:numColumns="1"
+                           android:layout_weight="1" />
+
+                   </LinearLayout>
+               </LinearLayout>
+               <com.google.android.material.button.MaterialButton
+                   android:id="@+id/btnSubmit"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:text="@string/btnAddPlace" />
+
+           </LinearLayout>
+
         </androidx.cardview.widget.CardView>
 
 

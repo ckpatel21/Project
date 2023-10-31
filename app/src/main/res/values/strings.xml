@@ -4,9 +4,24 @@
     <string name="profile">Profile</string>
     <string name="home">Home</string>
     <string name="logout">Logout</string>
-    <string name="addPlace">Add Place</string>
-    <string name="placeName">Place name</string>
-    <string name="placeDescription">Place Description</string>
+    <string name="place">Place</string>
+    <string name="event">Event</string>
+    <string name="place_name">Place name</string>
+    <string name="place_description">Place Description</string>
     <string name="submit">Submit</string>
+    <string name="add_pictures">Add Pictures</string>
+    <string name="map">Map</string>
+    <string name="event_name">Event Name</string>
+    <string name="event_description">Event Description</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="time">Time\n</string>
+    <string name="hello_blank_fragment">test</string>
+    <string name="btnAddEvent">Add Event</string>
+    <string name="btnAddPlace">Add Place</string>
+    <string name="txtAddPictures">Add Your Memories or Pictures</string>
+    <string name="txtOr">OR</string>
+    <string name="txtSelectCategory">Select Category</string>
+    <string name="title_the_explorer">The Explorer</string>
 
 </resources>

@@ -6,12 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.capstone.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.AuthResult
 
 
 class HomeActivity : AppCompatActivity() {
 
-    lateinit var bottomNav : BottomNavigationView
+    private lateinit var bottomNav : BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,11 +24,19 @@ class HomeActivity : AppCompatActivity() {
         Log.d("Email",email.toString())
         Log.d("Name",name.toString())
 
-        loadFragment(MapsFragment())
-        bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        //Default Fragment as Home
+        loadFragment(EventFragment())
+
+        bottomNav = findViewById(R.id.bottomNav)
+        bottomNav.itemIconTintList = null
         bottomNav.setOnItemSelectedListener {
+
             when (it.itemId) {
                 R.id.home -> {
+                    loadFragment(EventFragment())
+                    true
+                }
+                R.id.map -> {
                     loadFragment(MapsFragment())
                     true
                 }
@@ -37,8 +44,12 @@ class HomeActivity : AppCompatActivity() {
                     loadFragment(ProfileFragment())
                     true
                 }
-                R.id.add -> {
+                R.id.place -> {
                     loadFragment(AddPlaceFragment())
+                    true
+                }
+                R.id.event -> {
+                    loadFragment(AddEventFragment())
                     true
                 }
                 else -> {

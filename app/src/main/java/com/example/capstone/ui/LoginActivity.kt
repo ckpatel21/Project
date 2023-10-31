@@ -20,7 +20,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 
 class LoginActivity : AppCompatActivity() {
 
-    var mAuth = FirebaseAuth.getInstance()
+    private var mAuth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,10 +79,11 @@ class LoginActivity : AppCompatActivity() {
                     val email = user?.email.toString()
                     val name = user?.displayName.toString()
 
-                    //Shared preference
+                    //Storing Email and Name in Shared preference
                     val sharedPreference =  getSharedPreferences(LOGIN_CREDENTIAL, Context.MODE_PRIVATE)
                     val editor = sharedPreference.edit()
                     editor.putString("email",email)
+                    editor.putString("name",email)
                     editor.apply()
 
                     //Send data
