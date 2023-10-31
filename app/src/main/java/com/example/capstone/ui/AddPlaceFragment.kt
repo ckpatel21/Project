@@ -7,29 +7,25 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.EditText
-import android.widget.GridView
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import com.example.capstone.adapter.PlacePictureAdapter
 import com.example.capstone.R
+import com.example.capstone.databinding.FragmentAddPlaceBinding
 import com.example.capstone.model.*
 import com.example.capstone.utils.Constant
 import com.google.android.gms.location.*
@@ -37,6 +33,11 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.concurrent.Executors
 
 
 class AddPlaceFragment : Fragment() {
@@ -45,29 +46,33 @@ class AddPlaceFragment : Fragment() {
     private var firebaseStore: FirebaseStorage? = null
     private var storageReference: StorageReference? = null
 
+
     //Get location
     private val permissionId = 42
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    var lat = 0.0
-    var lng = 0.0
+    private var lat = 0.0
+    private var lng = 0.0
 
     //Save Category
-    var category = "Select One"
+    private var category = "Select One"
 
     private lateinit var keyValue : DatabaseReference
-    data class Image(val uri : Uri)
+    private val executor = Executors.newSingleThreadExecutor()
+
+    private var fragmentAddPlaceBinding : FragmentAddPlaceBinding? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_place, container, false)
+        fragmentAddPlaceBinding = FragmentAddPlaceBinding.inflate(inflater, container, false)
+        return fragmentAddPlaceBinding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //
+
         firebaseStore = FirebaseStorage.getInstance()
         storageReference = FirebaseStorage.getInstance().reference
 
@@ -75,10 +80,6 @@ class AddPlaceFragment : Fragment() {
         getResponseFromRealtimeDatabaseUsingLiveData()
 
         //Variable Declaration
-        val submitBtn = view.findViewById<Button>(R.id.btnSubmit)
-        val placeNameEt = view.findViewById<EditText>(R.id.etPlaceName)
-        val placeDescriptionEt = view.findViewById<EditText>(R.id.etPlaceDescription)
-
         val uploadPictureBtn = view.findViewById<ImageView>(R.id.imageBtnUploadPhoto)
         val takePictureBtn = view.findViewById<ImageView>(R.id.imageBtnTakePhoto)
 
@@ -97,7 +98,7 @@ class AddPlaceFragment : Fragment() {
         )
         categoryList.setAdapter(adapter)
         categoryList.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, view, position, id->
+            AdapterView.OnItemClickListener { parent, _, position, id->
                 // do something with the available information
                  category = categoryList.text.toString()
 
@@ -105,12 +106,18 @@ class AddPlaceFragment : Fragment() {
 
         //Select picture
         uploadPictureBtn.setOnClickListener {
-            getContent.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
+            getPhotosFromGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
         }
 
-        submitBtn.setOnClickListener {
-            val placeName = placeNameEt.text.toString()
-            val placeDescription = placeDescriptionEt.text.toString()
+        //Take picture
+        takePictureBtn.setOnClickListener {
+
+        }
+
+
+        fragmentAddPlaceBinding!!.btnSubmit.setOnClickListener {
+            val placeName = fragmentAddPlaceBinding!!.etPlaceName.text.toString()
+            val placeDescription = fragmentAddPlaceBinding!!.etPlaceDescription.text.toString()
             val latitude = lat
             val longitude = lng
 
@@ -124,30 +131,10 @@ class AddPlaceFragment : Fragment() {
             key.child("status").setValue(true)
 
 
-
-            /*val mountainImagesRef = storageRef.child("upload.png")
-            val imageView = view.findViewById<ImageView>(R.id.image)
-
-            imageView.isDrawingCacheEnabled = true
-            imageView.buildDrawingCache()
-            val bitmap = (imageView.drawable as BitmapDrawable).bitmap
-            val baos = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-            val data = baos.toByteArray()
-
-            var uploadTask = mountainImagesRef.putBytes(data)
-            uploadTask.addOnFailureListener {
-                // Handle unsuccessful uploads
-            }.addOnSuccessListener { taskSnapshot ->
-                // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-                // ...
-            }*/
         }
     }
 
-    //Get pictures
-
-    private val getContent = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(3)) { pictureUri : List<Uri> ->
+    private val getPhotosFromGallery = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(3)) { pictureUri : List<Uri> ->
 
             displayPictures(pictureUri)
 
@@ -157,7 +144,6 @@ class AddPlaceFragment : Fragment() {
             val uploadTask = ref?.child(i.toString())?.putFile(pictureUri[i])
 
         }
-
     }
 
     private fun displayPictures(pictureUri: List<Uri>) {
@@ -170,11 +156,6 @@ class AddPlaceFragment : Fragment() {
         gridView?.adapter =adapter
 
 
-    }
-
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(
-            requireActivity(), it) == PackageManager.PERMISSION_GRANTED
     }
 
     //Fetch Values from Firebase
@@ -244,18 +225,5 @@ class AddPlaceFragment : Fragment() {
         )
     }
 
-    companion object {
-        private const val TAG = "CameraXApp"
-        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
-        private val REQUIRED_PERMISSIONS =
-            mutableListOf (
-                Manifest.permission.CAMERA,
-                Manifest.permission.RECORD_AUDIO
-            ).apply {
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                    add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                }
-            }.toTypedArray()
-    }
 
 }
