@@ -1,10 +1,10 @@
 package com.example.capstone.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capstone.adapter.EventsAdapter
@@ -15,7 +15,7 @@ import com.example.capstone.utils.Constant
 
 class EventFragment : Fragment() {
 
-    private var fragmentEventBinding : FragmentEventBinding? = null
+    private var fragmentEventBinding: FragmentEventBinding? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,7 +31,7 @@ class EventFragment : Fragment() {
         fetchEventDetails()
     }
 
-    private fun fetchEventDetails() : MutableLiveData<Response> {
+    private fun fetchEventDetails(): MutableLiveData<Response> {
         val mutableLiveData = MutableLiveData<Response>()
         val data = ArrayList<Events>()
         Constant.databaseReference.child("events").get().addOnCompleteListener { task ->
@@ -44,14 +44,18 @@ class EventFragment : Fragment() {
                         data.add(snapShot.getValue(Events::class.java)!!)
                     }
                 }
+                mutableLiveData.value = response
+                fragmentEventBinding!!.eventsRecyclerView.layoutManager =
+                    LinearLayoutManager(requireActivity())
+
+                val adapter = EventsAdapter(data)
+                fragmentEventBinding!!.eventsRecyclerView.adapter = adapter
+
             } else {
+                //TODO
+                //No data found
                 response.exception = task.exception
             }
-            mutableLiveData.value = response
-            fragmentEventBinding!!.eventsRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
-
-            val adapter = EventsAdapter(data)
-            fragmentEventBinding!!.eventsRecyclerView.adapter = adapter
 
         }
         return mutableLiveData

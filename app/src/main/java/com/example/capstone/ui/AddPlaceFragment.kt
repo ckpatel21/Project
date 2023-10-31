@@ -8,11 +8,9 @@ import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -21,10 +19,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
-import com.example.capstone.adapter.PlacePictureAdapter
 import com.example.capstone.R
+import com.example.capstone.adapter.PlacePictureAdapter
 import com.example.capstone.databinding.FragmentAddPlaceBinding
 import com.example.capstone.model.*
 import com.example.capstone.utils.Constant
@@ -33,11 +30,6 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.concurrent.Executors
 
 
 class AddPlaceFragment : Fragment() {
@@ -56,10 +48,9 @@ class AddPlaceFragment : Fragment() {
     //Save Category
     private var category = "Select One"
 
-    private lateinit var keyValue : DatabaseReference
-    private val executor = Executors.newSingleThreadExecutor()
+    private lateinit var keyValue: DatabaseReference
 
-    private var fragmentAddPlaceBinding : FragmentAddPlaceBinding? = null
+    private var fragmentAddPlaceBinding: FragmentAddPlaceBinding? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -79,11 +70,6 @@ class AddPlaceFragment : Fragment() {
         //Fetch Data
         getResponseFromRealtimeDatabaseUsingLiveData()
 
-        //Variable Declaration
-        val uploadPictureBtn = view.findViewById<ImageView>(R.id.imageBtnUploadPhoto)
-        val takePictureBtn = view.findViewById<ImageView>(R.id.imageBtnTakePhoto)
-
-        val categoryList = view.findViewById<AutoCompleteTextView>(R.id.categoryDropdown)
         val categorySpinner = view.findViewById<TextInputLayout>(R.id.categorySpinner)
         //Get location
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -94,28 +80,30 @@ class AddPlaceFragment : Fragment() {
         //TODO
         //Add Category
         val adapter = ArrayAdapter(
-            requireContext(), android.R.layout.simple_spinner_dropdown_item, arrayOf("Park", "Trail", "Historical", "Innovative")
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            arrayOf("Park", "Trail", "Historical", "Innovative")
         )
-        categoryList.setAdapter(adapter)
-        categoryList.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, _, position, id->
+        fragmentAddPlaceBinding!!.categoryDropdown.setAdapter(adapter)
+        fragmentAddPlaceBinding!!.categoryDropdown.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, _, position, id ->
                 // do something with the available information
-                 category = categoryList.text.toString()
+                category = fragmentAddPlaceBinding!!.categoryDropdown.text.toString()
 
             }
 
         //Select picture
-        uploadPictureBtn.setOnClickListener {
+        fragmentAddPlaceBinding!!.imageBtnUploadPhoto.setOnClickListener {
             getPhotosFromGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
         }
 
         //Take picture
-        takePictureBtn.setOnClickListener {
+        fragmentAddPlaceBinding!!.imageBtnTakePhoto.setOnClickListener {
 
         }
 
 
-        fragmentAddPlaceBinding!!.btnSubmit.setOnClickListener {
+        fragmentAddPlaceBinding!!.btnAddEvent.setOnClickListener {
             val placeName = fragmentAddPlaceBinding!!.etPlaceName.text.toString()
             val placeDescription = fragmentAddPlaceBinding!!.etPlaceDescription.text.toString()
             val latitude = lat
@@ -134,32 +122,30 @@ class AddPlaceFragment : Fragment() {
         }
     }
 
-    private val getPhotosFromGallery = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(3)) { pictureUri : List<Uri> ->
+    private val getPhotosFromGallery =
+        registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(3)) { pictureUri: List<Uri> ->
 
             displayPictures(pictureUri)
 
-        val ref = storageReference?.child("places")?.child(keyValue.key.toString())
-        for(i in pictureUri.indices){
-           // storageRef.child("placeName${pictureUri.first()}").putFile(pictureUri.first())
-            val uploadTask = ref?.child(i.toString())?.putFile(pictureUri[i])
+            val ref = storageReference?.child("places")?.child(keyValue.key.toString())
+            for (i in pictureUri.indices) {
+                // storageRef.child("placeName${pictureUri.first()}").putFile(pictureUri.first())
+                val uploadTask = ref?.child(i.toString())?.putFile(pictureUri[i])
 
+            }
         }
-    }
 
     private fun displayPictures(pictureUri: List<Uri>) {
 
 
         val adapter = PlacePictureAdapter(courseList = pictureUri, requireActivity())
-
-        val gridView = view?.findViewById<GridView>(R.id.gridPictures)
-
-        gridView?.adapter =adapter
+        fragmentAddPlaceBinding!!.gridPictures.adapter = adapter
 
 
     }
 
     //Fetch Values from Firebase
-    private fun getResponseFromRealtimeDatabaseUsingLiveData() : MutableLiveData<Response> {
+    private fun getResponseFromRealtimeDatabaseUsingLiveData(): MutableLiveData<Response> {
         val mutableLiveData = MutableLiveData<Response>()
         Constant.databaseReference.child("places").get().addOnCompleteListener { task ->
             val response = Response()
@@ -174,15 +160,22 @@ class AddPlaceFragment : Fragment() {
                 response.exception = task.exception
             }
             mutableLiveData.value = response
-            Log.d("Data",mutableLiveData.value.toString())
+            Log.d("Data", mutableLiveData.value.toString())
         }
         return mutableLiveData
     }
 
     private fun checkPermissions(): Boolean {
         if (
-            ActivityCompat.checkSelfPermission(requireActivity(),Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
-                (requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+                (
+                requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             return true
         }
         return false
@@ -210,15 +203,21 @@ class AddPlaceFragment : Fragment() {
             requestPermissions()
         }
     }
+
     private fun requestPermissions() {
         ActivityCompat.requestPermissions(
             requireActivity(),
-            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ),
             permissionId
         )
     }
+
     private fun isLocationEnabled(): Boolean {
-        val locationManager : LocationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager: LocationManager =
+            context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
             LocationManager.NETWORK_PROVIDER

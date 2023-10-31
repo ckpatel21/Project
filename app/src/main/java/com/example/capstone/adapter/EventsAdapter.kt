@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.capstone.R
 import com.example.capstone.model.Events
 
-class EventsAdapter(private val eventList: List<Events>) : RecyclerView.Adapter<EventsAdapter.ViewHolder>() {
+class EventsAdapter(private val eventList: List<Events>) :
+    RecyclerView.Adapter<EventsAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.layout_events, parent, false)

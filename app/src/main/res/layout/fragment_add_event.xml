@@ -7,13 +7,12 @@
     tools:context=".ui.AddEventFragment">
 
 
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="@dimen/_0dp"
         android:layout_height="@dimen/_0dp"
-        android:orientation="vertical"
         android:layout_margin="@dimen/_10dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,8 +22,8 @@
             android:id="@+id/textViewAddPlace"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/_24sp"
-            android:text="@string/event" />
+            android:text="@string/event"
+            android:textSize="@dimen/_24sp" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -34,58 +33,100 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_20dp"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
-                <EditText
-                    android:id="@+id/etEventName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:layout_margin="@dimen/_10dp"
-                    android:inputType="text"
-                    android:hint="@string/event_name" />
-                <EditText
-                    android:id="@+id/etEventDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:layout_margin="@dimen/_10dp"
-                    android:lines="4"
-                    android:maxLines="4"
-                    android:hint="@string/event_description" />
 
-                <TextView
-                    android:id="@+id/tvStartDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:textSize="@dimen/_16sp"
-                    android:layout_margin="@dimen/_10dp"
-                    android:hint="@string/start_date"/>
-                <TextView
-                    android:id="@+id/tvEndDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:layout_margin="@dimen/_10dp"
-                    android:textSize="@dimen/_16sp"
-                    android:hint="@string/end_date" />
-                <TextView
-                    android:id="@+id/tvTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:layout_margin="@dimen/_10dp"
-                    android:textSize="@dimen/_16sp"
-                    android:hint="@string/time" />
-
-                <Button
-                    android:id="@+id/btnSubmit"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/btnAddEvent" />
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/etEventName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_10dp"
+                        android:ems="10"
+                        android:hint="@string/event_name"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:id="@+id/etEventDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_10dp"
+                        android:ems="10"
+                        android:hint="@string/event_description"
+                        android:inputType="text"
+                        android:lines="4"
+                        android:maxLines="4" />
+
+                    <TextView
+                        android:id="@+id/tvStartDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_10dp"
+                        android:drawableLeft="@drawable/textview_icon_date_24"
+                        android:drawablePadding="@dimen/_10dp"
+                        android:ems="10"
+                        android:hint="@string/start_date"
+                        android:textSize="@dimen/_16sp" />
+
+                    <TextView
+                        android:id="@+id/tvEndDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_10dp"
+                        android:drawableLeft="@drawable/textview_icon_date_24"
+                        android:drawablePadding="@dimen/_10dp"
+                        android:ems="10"
+                        android:hint="@string/end_date"
+                        android:textSize="@dimen/_16sp" />
+
+                    <TextView
+                        android:id="@+id/tvTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_10dp"
+                        android:ems="10"
+                        android:gravity="center_vertical"
+                        android:drawableLeft="@drawable/textview_icon_time_24"
+                        android:drawablePadding="@dimen/_10dp"
+                        android:hint="@string/time"
+                        android:textSize="@dimen/_16sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/etEventLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_10dp"
+                        android:ems="10"
+
+                        android:drawableLeft="@drawable/textview_icon_location_24"
+                        android:drawablePadding="@dimen/_10dp"
+                        android:hint="@string/event_location"
+                        android:inputType="text" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_20dp"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/btnAddEvent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/btnAddEvent" />
+                </LinearLayout>
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
