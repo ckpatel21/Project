@@ -85,11 +85,14 @@ class AddEventFragment : Fragment() {
 
             //Adding Key
             val key = Constant.databaseReference.child("events").push()
+
             val eventData = Events(null,eventName,eventDescription,startDate,endDate,time,eventLocation)
-            key.setValue(eventData).addOnSuccessListener {
-                Toast.makeText(requireActivity(),"Success",Toast.LENGTH_LONG).show()
-            }
+
             //Adding values in Firebase
+            key.setValue(eventData).addOnSuccessListener {
+                Toast.makeText(requireActivity(),"Successfully added!",Toast.LENGTH_LONG).show()
+            }
+
 /*
             key.child("addedBy").setValue("Email")
             key.child("eventName").setValue(eventName)
