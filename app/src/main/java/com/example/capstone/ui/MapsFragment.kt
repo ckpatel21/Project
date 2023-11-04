@@ -1,37 +1,76 @@
 package com.example.capstone.ui
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.location.Location
+import android.os.Build
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import com.example.capstone.R
 import com.example.capstone.model.Place
 import com.example.capstone.model.Response
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.CameraUpdateFactory
-
 import com.google.android.gms.maps.GoogleMap
+
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class MapsFragment : Fragment() {
 
     //Firebase initialization
-    val database = Firebase.database
-    val myRef = database.getReference("capstone")
+    private val database = Firebase.database
+    private val myRef = database.getReference("capstone")
 
-    val mutableLiveData = MutableLiveData<Response>()
+    private val mutableLiveData = MutableLiveData<Response>()
+
+    lateinit var mGoogleMap: GoogleMap
+    var mLastLocation: Location? = null
+    private var mFusedLocationClient: FusedLocationProviderClient? = null
+
+    private var mLocationCallback: LocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            val locationList = locationResult.locations
+            if (locationList.isNotEmpty()) {
+                val location = locationList.last()
+                mLastLocation = location
+                if (mLastLocation != null) {
+                    // Create a LatLng object for the current location
+                    val currentLatLng = LatLng(mLastLocation!!.latitude, mLastLocation!!.longitude)
+                    Toast.makeText(getActivity(),currentLatLng.toString(), Toast.LENGTH_SHORT).show();
+
+                    // Create a marker for the current location
+//                    mGoogleMap.addMarker(
+//                        MarkerOptions()
+//                            .position(currentLatLng)
+//                            .title("My Location")
+//                    )
+                    // Move the camera to the current location
+                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 16f))
+                }
+            }
+        }
+    }
 
     private val callback = OnMapReadyCallback { mMap ->
-
 
        /* for(i in 0 until mutableLiveData.value?.list!!.size){
             val markerData = mutableLiveData.value?.list!![i] // Replace with your marker data
@@ -46,7 +85,48 @@ class MapsFragment : Fragment() {
 
         //mMap.moveCamera(CameraUpdateFactory.new( 16.0f))
 
+        mGoogleMap = mMap
+        mGoogleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
+        enableMyLocation()
+    }
 
+    private fun enableMyLocation() {
+        if (checkPermissions()) {
+            val locationRequest = LocationRequest.Builder(10000)
+                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+                .build()
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(
+                        requireActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    mFusedLocationClient?.requestLocationUpdates(
+                        locationRequest,
+                        mLocationCallback,
+                        Looper.myLooper()
+                    )
+                    mGoogleMap.isMyLocationEnabled = true
+                } else {
+                    ActivityCompat.requestPermissions(
+                        requireActivity(),
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        PERMISSIONS_REQUEST_LOCATION
+                    )
+                }
+            } else {
+                mFusedLocationClient?.requestLocationUpdates(
+                    locationRequest,
+                    mLocationCallback,
+                    Looper.myLooper()
+                )
+                mGoogleMap.isMyLocationEnabled = true
+            }
+        } else {
+            // Handle permission denied
+            // You can display a message or request permission again here
+        }
     }
 
 
@@ -60,7 +140,7 @@ class MapsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         getResponseFromRealtimeDatabaseUsingLiveData()
 
         //(activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
@@ -94,5 +174,13 @@ class MapsFragment : Fragment() {
 
         }
         return mutableLiveData
+    }
+    companion object {
+        private const val PERMISSIONS_REQUEST_LOCATION = 123
+    }
+
+    private fun checkPermissions(): Boolean {
+        return (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
     }
 }

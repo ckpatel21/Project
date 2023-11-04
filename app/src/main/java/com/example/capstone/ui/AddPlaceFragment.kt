@@ -148,7 +148,6 @@ class AddPlaceFragment : Fragment() {
 
     private fun displayPictures(pictureUri: List<Uri>) {
 
-
         val adapter = PlacePictureAdapter(courseList = pictureUri, requireActivity())
 
         val gridView = view?.findViewById<GridView>(R.id.gridPictures)
