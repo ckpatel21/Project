@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 
 import android.os.Bundle
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +30,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -68,16 +68,16 @@ class MapsFragment : Fragment() {
 
     private val callback = OnMapReadyCallback { mMap ->
 
-       /* for(i in 0 until mutableLiveData.value?.list!!.size){
-            val markerData = mutableLiveData.value?.list!![i] // Replace with your marker data
+//       /* for(i in 0 until mutableLiveData.value?.list!!.size){
+//            val markerData = mutableLiveData.value?.list!![i] // Replace with your marker data
 
-            val markerOptions = MarkerOptions()
-                .position(LatLng(markerData.latitude!!, markerData.longitude!!))
-                .title(markerData.placeName)
-                .snippet(markerData.placeDescription)
-
-            mMap.addMarker(markerOptions)
-    }*/
+//            val markerOptions = MarkerOptions()
+//                .position(LatLng(43.47412575636098, -80.5332843170499))
+//                .title("Home")
+//                .snippet("this is my home")
+//
+//            mMap.addMarker(markerOptions)
+//    }*/
 
         //mMap.moveCamera(CameraUpdateFactory.new( 16.0f))
 
