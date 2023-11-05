@@ -16,7 +16,6 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import java.util.Date
 
-
 class AddEventFragment : Fragment() {
 
     private var fragmentAddEventBinding: FragmentAddEventBinding? = null

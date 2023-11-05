@@ -1,5 +1,6 @@
 package com.example.capstone.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -48,7 +49,20 @@ class EventFragment : Fragment() {
                 fragmentEventBinding!!.eventsRecyclerView.layoutManager =
                     LinearLayoutManager(requireActivity())
 
-                val adapter = EventsAdapter(data)
+                val adapter = EventsAdapter(data , object : EventsAdapter.BtnClickListener {
+                    override fun onBtnClick(
+                        position: Int,
+                        eventName: String?,
+                        eventStartDate: String?
+                    ) {
+                        val intent= Intent()
+                        intent.action=Intent.ACTION_SEND
+                        //TODO Share event details
+                        intent.putExtra(Intent.EXTRA_TEXT,"Hey guys, check this event - $eventName on $eventStartDate")
+                        intent.type="text/plain"
+                        startActivity(Intent.createChooser(intent,"Share To:"))
+                    }
+                })
                 fragmentEventBinding!!.eventsRecyclerView.adapter = adapter
 
             } else {

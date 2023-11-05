@@ -28,8 +28,7 @@ class LoginActivity : AppCompatActivity() {
 
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            //TODO
-            //.requestIdToken(getString(R.string.default_web_client_id))
+            .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
 
@@ -50,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
                 try {
                     // Google Sign In was successful, authenticate with Firebase
                     val account = task.getResult(ApiException::class.java)
-                    firebaseAuthWithGoogle(account.idToken!!)
+                    account.idToken?.let { firebaseAuthWithGoogle(it) }
                 } catch (e: ApiException) {
                     // Google Sign In failed, update UI appropriately
                 }

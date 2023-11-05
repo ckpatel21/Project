@@ -25,5 +25,7 @@
     <string name="title_the_explorer">The Explorer</string>
     <string name="select_one_category">Select One Category</string>
     <string name="event_location">Event Location</string>
+    <string name="add_feedback">Add Feedback</string>
+    <string name="notification">Notification</string>
 
 </resources>

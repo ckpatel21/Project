@@ -9,8 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.capstone.R
 import com.example.capstone.model.Events
 
-class EventsAdapter(private val eventList: List<Events>) :
+class EventsAdapter(private val eventList: List<Events>,  val btnClickListener: BtnClickListener) :
     RecyclerView.Adapter<EventsAdapter.ViewHolder>() {
+
+    companion object {
+        var mClickListener: BtnClickListener? = null
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.layout_events, parent, false)
@@ -26,6 +30,12 @@ class EventsAdapter(private val eventList: List<Events>) :
         holder.eventDescription.text = eventViewModel.eventDescription
         holder.eventDate.text = eventViewModel.eventStartDate
 
+        mClickListener = btnClickListener
+
+        holder.shareBtn.setOnClickListener {
+            if (mClickListener != null)
+                mClickListener?.onBtnClick(position, eventViewModel.eventName, eventViewModel.eventStartDate)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -37,6 +47,10 @@ class EventsAdapter(private val eventList: List<Events>) :
         val eventName: TextView = this.itemView.findViewById(R.id.eventName)
         val eventDescription: TextView = this.itemView.findViewById(R.id.eventDescription)
         val eventDate: TextView = this.itemView.findViewById(R.id.eventDate)
+        val shareBtn : ImageView = this.itemView.findViewById(R.id.ivShareBtn)
+    }
 
+    open interface BtnClickListener {
+        fun onBtnClick(position: Int, eventName: String?, eventStartDate: String?)
     }
 }
