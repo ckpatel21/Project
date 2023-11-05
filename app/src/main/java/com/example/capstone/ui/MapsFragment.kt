@@ -43,7 +43,6 @@ class MapsFragment : Fragment() {
     private val mutableLiveData = MutableLiveData<Response>()
 
     lateinit var mGoogleMap: GoogleMap
-    var mLastLocation: Location? = null
     private var mFusedLocationClient: FusedLocationProviderClient? = null
 
     private var mLocationCallback: LocationCallback = object : LocationCallback() {
@@ -51,12 +50,11 @@ class MapsFragment : Fragment() {
             val locationList = locationResult.locations
             if (locationList.isNotEmpty()) {
                 val location = locationList.last()
-                mLastLocation = location
-                if (mLastLocation != null) {
                     // Create a LatLng object for the current location
-                    val currentLatLng = LatLng(mLastLocation!!.latitude, mLastLocation!!.longitude)
+                    val currentLatLng = LatLng(location!!.latitude, location!!.longitude)
                     Toast.makeText(getActivity(),currentLatLng.toString(), Toast.LENGTH_SHORT).show();
-
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+                mFusedLocationClient?.removeLocationUpdates(this)
                     // Create a marker for the current location
 //                    mGoogleMap.addMarker(
 //                        MarkerOptions()
@@ -64,8 +62,6 @@ class MapsFragment : Fragment() {
 //                            .title("My Location")
 //                    )
                     // Move the camera to the current location
-                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 16f))
-                }
             }
         }
     }
@@ -92,9 +88,8 @@ class MapsFragment : Fragment() {
 
     private fun enableMyLocation() {
         if (checkPermissions()) {
-            val locationRequest = LocationRequest.Builder(10000)
+            val locationRequest = LocationRequest.create()
                 .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-                .build()
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ContextCompat.checkSelfPermission(
