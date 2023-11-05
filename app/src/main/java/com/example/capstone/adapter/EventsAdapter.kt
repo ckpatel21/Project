@@ -5,15 +5,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstone.R
 import com.example.capstone.model.Events
 
-class EventsAdapter(private val eventList: List<Events>,  val btnClickListener: BtnClickListener) :
+class EventsAdapter(private val eventList: List<Events>,  val shareBtnClickListener: ShareBtnClickListener, val layoutBtnClickListener : LayoutBtnClickListener) :
     RecyclerView.Adapter<EventsAdapter.ViewHolder>() {
 
     companion object {
-        var mClickListener: BtnClickListener? = null
+        var shareClickListener: ShareBtnClickListener? = null
+        var layoutClickListener: LayoutBtnClickListener? = null
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -30,11 +32,18 @@ class EventsAdapter(private val eventList: List<Events>,  val btnClickListener: 
         holder.eventDescription.text = eventViewModel.eventDescription
         holder.eventDate.text = eventViewModel.eventStartDate
 
-        mClickListener = btnClickListener
+        shareClickListener = shareBtnClickListener
+        layoutClickListener = layoutBtnClickListener
 
         holder.shareBtn.setOnClickListener {
-            if (mClickListener != null)
-                mClickListener?.onBtnClick(position, eventViewModel.eventName, eventViewModel.eventStartDate)
+            if (shareClickListener != null){
+                shareClickListener?.onShareBtnClick(position, eventViewModel.eventName, eventViewModel.eventStartDate)
+            }
+        }
+        holder.eventLayout.setOnClickListener {
+            if (layoutClickListener != null){
+                layoutClickListener?.onLayoutClick(position, eventViewModel)
+            }
         }
     }
 
@@ -43,6 +52,7 @@ class EventsAdapter(private val eventList: List<Events>,  val btnClickListener: 
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val eventLayout : CardView = this.itemView.findViewById(R.id.eventLayout)
         val eventPicture: ImageView = this.itemView.findViewById(R.id.eventPicture)
         val eventName: TextView = this.itemView.findViewById(R.id.eventName)
         val eventDescription: TextView = this.itemView.findViewById(R.id.eventDescription)
@@ -50,7 +60,10 @@ class EventsAdapter(private val eventList: List<Events>,  val btnClickListener: 
         val shareBtn : ImageView = this.itemView.findViewById(R.id.ivShareBtn)
     }
 
-    open interface BtnClickListener {
-        fun onBtnClick(position: Int, eventName: String?, eventStartDate: String?)
+    open interface ShareBtnClickListener {
+        fun onShareBtnClick(position: Int, eventName: String?, eventStartDate: String?)
+    }
+    open interface  LayoutBtnClickListener {
+        fun onLayoutClick(position: Int, eventList : Events )
     }
 }

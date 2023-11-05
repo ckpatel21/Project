@@ -50,6 +50,8 @@ class AddPlaceFragment : Fragment() {
 
     private lateinit var keyValue: DatabaseReference
 
+    private lateinit var picturesListUrl : ArrayList<Uri>
+
     private var fragmentAddPlaceBinding: FragmentAddPlaceBinding? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,6 +69,8 @@ class AddPlaceFragment : Fragment() {
         firebaseStore = FirebaseStorage.getInstance()
         storageReference = FirebaseStorage.getInstance().reference
 
+        picturesListUrl = ArrayList()
+
         //Fetch Data
         getResponseFromRealtimeDatabaseUsingLiveData()
 
@@ -75,8 +79,6 @@ class AddPlaceFragment : Fragment() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         getLastLocation()
 
-        val key = Constant.databaseReference.child("places").push()
-        keyValue = key
         //TODO
         //Add Category
         val adapter = ArrayAdapter(
@@ -109,16 +111,33 @@ class AddPlaceFragment : Fragment() {
             val latitude = lat
             val longitude = lng
 
-            //Adding values in Firebase
+            /*//Adding values in Firebase
             key.child("addedBy").setValue("Email")
             key.child("placeName").setValue(placeName)
             key.child("placeDescription").setValue(placeDescription)
             key.child("latitude").setValue(latitude)
             key.child("category").setValue(category)
             key.child("longitude").setValue(longitude)
-            key.child("status").setValue(true)
+            key.child("status").setValue(true)*/
+
+            //Adding Key
+            val key = Constant.databaseReference.child("place").push()
+            keyValue = key
+
+            val placeData = Place(null,latitude,longitude,placeName,placeDescription,category)
+
+            //Adding values in Firebase
+            key.setValue(placeData).addOnSuccessListener {
+                Toast.makeText(requireActivity(),"Successfully added!",Toast.LENGTH_LONG).show()
+            }
 
 
+            //Adding pictures
+            val ref = storageReference?.child("places")?.child(keyValue.key.toString())
+            for(i in picturesListUrl.indices){
+                ref?.child(i.toString())?.putFile(picturesListUrl[i])
+                key.child("pictures").child(i.toString()).setValue(picturesListUrl[i].toString())
+            }
         }
     }
 
@@ -127,11 +146,10 @@ class AddPlaceFragment : Fragment() {
 
             displayPictures(pictureUri)
 
-            val ref = storageReference?.child("places")?.child(keyValue.key.toString())
             for (i in pictureUri.indices) {
                 // storageRef.child("placeName${pictureUri.first()}").putFile(pictureUri.first())
-                val uploadTask = ref?.child(i.toString())?.putFile(pictureUri[i])
-
+                picturesListUrl.add(pictureUri[i])
+                //val uploadTask = ref?.child(i.toString())?.putFile(pictureUri[i])
             }
         }
 
@@ -156,6 +174,7 @@ class AddPlaceFragment : Fragment() {
                         snapShot.getValue(Place::class.java)!!
                     }
                 }
+
             } else {
                 response.exception = task.exception
             }
