@@ -3,7 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-
+    id ("kotlin-parcelize")
 }
 
 android {
@@ -45,8 +45,6 @@ dependencies {
 
     val fragment_version = "1.6.2"
 
-    // Java language implementation
-    implementation("androidx.fragment:fragment:$fragment_version")
     // Kotlin
     implementation("androidx.fragment:fragment-ktx:$fragment_version")
 

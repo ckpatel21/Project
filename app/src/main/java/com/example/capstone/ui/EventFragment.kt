@@ -2,13 +2,13 @@ package com.example.capstone.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils.replace
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.capstone.R
 import com.example.capstone.adapter.EventsAdapter
 import com.example.capstone.databinding.FragmentEventBinding
 import com.example.capstone.model.Events
@@ -67,7 +67,7 @@ class EventFragment : Fragment() {
                     override fun onLayoutClick(
                         position: Int,
                         eventList: Events) {
-
+                        loadFragment(EventDetailsFragment(), eventList)
                     }
                 })
                 fragmentEventBinding!!.eventsRecyclerView.adapter = adapter
@@ -82,4 +82,13 @@ class EventFragment : Fragment() {
         return mutableLiveData
     }
 
+    private fun loadFragment(fragment: Fragment, eventList: Events) {
+        val bundle = Bundle()
+        bundle.putParcelable("event", eventList)
+        fragment.arguments = bundle
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, fragment)
+        transaction.addToBackStack("tag")
+        transaction.commit()
+    }
 }
