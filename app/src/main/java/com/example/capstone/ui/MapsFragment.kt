@@ -40,6 +40,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 
 class MapsFragment : Fragment() {
@@ -134,6 +137,7 @@ class MapsFragment : Fragment() {
         } else {
             // Handle permission denied
             // You can display a message or request permission again here
+
         }
     }
 
