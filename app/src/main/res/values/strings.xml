@@ -27,5 +27,9 @@
     <string name="event_location">Event Location</string>
     <string name="add_feedback">Add Feedback</string>
     <string name="notification">Notification</string>
+    <string name="txt_about_the_event">About the Event</string>
+    <string name="txtAddEventPoster">Add Event Poster</string>
+    <string name="txtTime">Time</string>
+    <string name="txt_want_to_change">Replace?</string>
 
 </resources>

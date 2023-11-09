@@ -1,12 +1,17 @@
 package com.example.capstone.ui
 
+import android.os.Build
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
+import android.os.Parcelable.Creator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.capstone.databinding.FragmentEventDetailsBinding
+import com.example.capstone.model.Events
 
 
 //Todo - Events details after clicking on specific event
@@ -20,13 +25,21 @@ class EventDetailsFragment : Fragment() {
         // Inflate the layout for this fragment
         fragmentEventDetailsBinding =
             FragmentEventDetailsBinding.inflate(inflater, container, false)
-
         return fragmentEventDetailsBinding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //(requireActivity() as AppCompatActivity?)!!.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        val data = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable("event", Events::class.java)
+        } else {
+            arguments?.getParcelable<Events>("event")
+        }
+        fragmentEventDetailsBinding?.eventTitle?.text = data?.eventName
+        fragmentEventDetailsBinding?.eventDate?.text = data?.eventStartDate
+        fragmentEventDetailsBinding?.eventTime?.text = data?.eventTime
+        fragmentEventDetailsBinding?.eventLocation?.text = data?.eventLocation
+        fragmentEventDetailsBinding?.eventDescription?.text = data?.eventDescription
     }
 }

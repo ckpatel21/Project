@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.capstone.R
-import com.example.capstone.adapter.EventsAdapter
+import com.example.capstone.adapter.ShowEventsAdapter
 import com.example.capstone.databinding.FragmentEventBinding
 import com.example.capstone.model.Events
 import com.example.capstone.model.Response
@@ -50,7 +50,7 @@ class EventFragment : Fragment() {
                 fragmentEventBinding!!.eventsRecyclerView.layoutManager =
                     LinearLayoutManager(requireActivity())
 
-                val adapter = EventsAdapter(data , object : EventsAdapter.ShareBtnClickListener {
+                val adapter = ShowEventsAdapter(data , object : ShowEventsAdapter.ShareBtnClickListener {
                     override fun onShareBtnClick(
                         position: Int,
                         eventName: String?,
@@ -63,7 +63,7 @@ class EventFragment : Fragment() {
                         intent.type="text/plain"
                         startActivity(Intent.createChooser(intent,"Share To:"))
                     }
-                }, object : EventsAdapter.LayoutBtnClickListener {
+                }, object : ShowEventsAdapter.LayoutBtnClickListener {
                     override fun onLayoutClick(
                         position: Int,
                         eventList: Events) {

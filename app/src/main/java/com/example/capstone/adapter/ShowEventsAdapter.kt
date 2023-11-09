@@ -1,5 +1,6 @@
 package com.example.capstone.adapter
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.capstone.R
 import com.example.capstone.model.Events
 
-class EventsAdapter(private val eventList: List<Events>,  val shareBtnClickListener: ShareBtnClickListener, val layoutBtnClickListener : LayoutBtnClickListener) :
-    RecyclerView.Adapter<EventsAdapter.ViewHolder>() {
+class ShowEventsAdapter(private val eventList: List<Events>, val shareBtnClickListener: ShareBtnClickListener, val layoutBtnClickListener : LayoutBtnClickListener) :
+    RecyclerView.Adapter<ShowEventsAdapter.ViewHolder>() {
 
     companion object {
         var shareClickListener: ShareBtnClickListener? = null
@@ -27,7 +28,7 @@ class EventsAdapter(private val eventList: List<Events>,  val shareBtnClickListe
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val eventViewModel = eventList[position]
 
-        holder.eventPicture.setImageURI(eventViewModel.pictures)
+        //holder.eventPicture.setImageURI(Uri.parse(eventViewModel.pictures))
         holder.eventName.text = eventViewModel.eventName
         holder.eventDescription.text = eventViewModel.eventDescription
         holder.eventDate.text = eventViewModel.eventStartDate
