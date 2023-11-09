@@ -1,7 +1,6 @@
 package com.example.capstone.ui
 
 import android.Manifest
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
@@ -19,7 +18,6 @@ import androidx.lifecycle.MutableLiveData
 import com.example.capstone.R
 import com.example.capstone.model.Place
 import com.example.capstone.model.Response
-import com.example.capstone.services.GeofenceService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -28,19 +26,13 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import android.content.Intent
-import android.content.BroadcastReceiver
-import androidx.core.content.ContextCompat.RECEIVER_EXPORTED
-import androidx.core.content.ContextCompat.registerReceiver
-import com.example.capstone.recievers.GeofenceBroadcastReceiver
 
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 
 class MapsFragment : Fragment() {
 
@@ -49,8 +41,6 @@ class MapsFragment : Fragment() {
     private val myRef = database.getReference("capstone")
 
     private val mutableLiveData = MutableLiveData<Response>()
-
-    private lateinit var geofenceReceiver: GeofenceBroadcastReceiver
 
     lateinit var mGoogleMap: GoogleMap
     private var mFusedLocationClient: FusedLocationProviderClient? = null
@@ -94,7 +84,6 @@ class MapsFragment : Fragment() {
         mGoogleMap = mMap
         mGoogleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
         enableMyLocation()
-
     }
 
     private fun enableMyLocation() {
@@ -114,7 +103,6 @@ class MapsFragment : Fragment() {
                         Looper.myLooper()
                     )
                     mGoogleMap.isMyLocationEnabled = true
-                    requireActivity().startService(Intent(requireContext(), GeofenceService::class.java))
                 } else {
                     ActivityCompat.requestPermissions(
                         requireActivity(),
@@ -129,7 +117,6 @@ class MapsFragment : Fragment() {
                     Looper.myLooper()
                 )
                 mGoogleMap.isMyLocationEnabled = true
-                requireActivity().startService(Intent(requireContext(), GeofenceService::class.java))
             }
         } else {
             // Handle permission denied
@@ -137,11 +124,6 @@ class MapsFragment : Fragment() {
         }
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -155,10 +137,6 @@ class MapsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         getResponseFromRealtimeDatabaseUsingLiveData()
-
-        // Register the receiver to listen for geofence events
-        val filter = IntentFilter("GEOFENCE_EVENT")
-//        registerReceiver(requireActivity(),geofenceReceiver, filter, RECEIVER_EXPORTED)
 
         //(activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         /*val fab = requireActivity().findViewById<FloatingActionButton>(R.id.floatingActionButton)
