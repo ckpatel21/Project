@@ -1,8 +1,11 @@
 package com.example.capstone.ui
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Build
 import androidx.fragment.app.Fragment
 
@@ -18,6 +21,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.capstone.R
 import com.example.capstone.model.Place
 import com.example.capstone.model.Response
+import com.example.capstone.services.GeofenceService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -44,6 +48,38 @@ class MapsFragment : Fragment() {
 
     lateinit var mGoogleMap: GoogleMap
     private var mFusedLocationClient: FusedLocationProviderClient? = null
+    private val geofenceReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == "GEOFENCE_EVENT") {
+                val geofenceName = intent.getStringExtra("geofenceName")
+                val latLng = intent.getParcelableExtra<LatLng>("latlng")
+                val entered = intent.getBooleanExtra("entered", true)
+                Toast.makeText(requireContext(), "RB: ${latLng.toString()} $entered", Toast.LENGTH_SHORT).show()
+                val markerOptions = latLng?.let {
+                    MarkerOptions()
+                        .position(it)
+                        .title("Home")
+                        .snippet("this is my home")
+                }
+
+                if (markerOptions != null) {
+                    mGoogleMap.addMarker(markerOptions)
+                }
+                if (entered) {
+                    // Geofence entered, update your list
+                    geofenceName?.let {
+                        Toast.makeText(requireContext(), "test", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+
+                    // Geofence exited, remove from the list
+                    geofenceName?.let {
+                        Toast.makeText(requireContext(), "test false", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
 
     private var mLocationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
@@ -137,7 +173,9 @@ class MapsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         getResponseFromRealtimeDatabaseUsingLiveData()
-
+        requireContext().startService(Intent(requireContext(), GeofenceService::class.java))
+        val filter = IntentFilter("GEOFENCE_EVENT")
+        requireContext().registerReceiver(geofenceReceiver, filter)
         //(activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         /*val fab = requireActivity().findViewById<FloatingActionButton>(R.id.floatingActionButton)
         fab.setOnClickListener {
