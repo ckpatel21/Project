@@ -43,7 +43,7 @@ class GeofenceBroadcastReceiver: BroadcastReceiver() {
                     context.sendBroadcast(geofenceIntent)
                     context.writeLogToFile(TAG, "Geofence exited,checkif broadcast is sent: ${it.requestId}")
                 }
-                Toast.makeText(context, "$transitionType  ${it.requestId}", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "$transitionType  ${it.requestId}", Toast.LENGTH_SHORT).show()
                 context.writeLogToFile(
                     TAG,
                     "Triggered $transitionType geofence for ${it.requestId} latitude: ${it.latitude}, longitude: ${it.longitude}, and radius: ${it.radius}"

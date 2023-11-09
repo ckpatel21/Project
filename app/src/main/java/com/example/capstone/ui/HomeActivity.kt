@@ -95,7 +95,7 @@ class HomeActivity : AppCompatActivity() {
                     ) == PackageManager.PERMISSION_GRANTED
                 ) {
                     // Background Location Permission is granted so do your work here
-                    startService(Intent(this, GeofenceService::class.java))
+//                    startService(Intent(this, GeofenceService::class.java))
                 } else {
                     // Ask for Background Location Permission
                     askPermissionForBackgroundUsage()
@@ -194,7 +194,7 @@ class HomeActivity : AppCompatActivity() {
                             ) == PackageManager.PERMISSION_GRANTED
                         ) {
                             // Background Location Permission is granted so do your work here
-                            startService(Intent(this, GeofenceService::class.java))
+//                            startService(Intent(this, GeofenceService::class.java))
                         } else {
                             // Ask for Background Location Permission
                             askPermissionForBackgroundUsage()
@@ -206,7 +206,7 @@ class HomeActivity : AppCompatActivity() {
             } else if (requestCode == BACKGROUND_LOCATION_PERMISSION_CODE) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // User granted for Background Location Permission.
-                    startService(Intent(this, GeofenceService::class.java))
+//                    startService(Intent(this, GeofenceService::class.java))
                 } else {
                     // User declined for Background Location Permission.
                     askPermissionForBackgroundUsage()
