@@ -1,9 +1,9 @@
 package com.example.capstone.ui
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +21,10 @@ import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 
 
 class AddEventFragment : Fragment() {
@@ -43,6 +46,7 @@ class AddEventFragment : Fragment() {
         return fragmentAddEventBinding!!.root
     }
 
+    @SuppressLint("SimpleDateFormat")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -78,15 +82,19 @@ class AddEventFragment : Fragment() {
             activity?.supportFragmentManager?.let { endDatePicker.show(it, "endDatePicker") }
         }
         startDatePicker.addOnPositiveButtonClickListener {
-            val date = Date(it)
-            val dateFormat: java.text.DateFormat? = DateFormat.getDateFormat(view.context)
-            startDate = dateFormat?.format(date).toString()
+            val est: Calendar = Calendar.getInstance(TimeZone.getTimeZone("EST"))
+            est.timeInMillis = it
+            est.add(Calendar.DAY_OF_MONTH,1)
+            val format = SimpleDateFormat("dd-MM-yyyy")
+            val startDate: String = format.format(est.time)
             fragmentAddEventBinding!!.tvStartDate.text = startDate
         }
         endDatePicker.addOnPositiveButtonClickListener {
-            val date = Date(it)
-            val dateFormat: java.text.DateFormat? = DateFormat.getDateFormat(view.context)
-            endDate = dateFormat?.format(date).toString()
+            val est: Calendar = Calendar.getInstance(TimeZone.getTimeZone("EST"))
+            est.timeInMillis = it
+            est.add(Calendar.DAY_OF_MONTH,1)
+            val format = SimpleDateFormat("dd-MM-yyyy")
+            val endDate: String = format.format(est.time)
             fragmentAddEventBinding!!.tvEndDate.text = endDate
         }
 
@@ -100,12 +108,19 @@ class AddEventFragment : Fragment() {
             getPhotosFromGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
         }
 
+        //Set Location
+        fragmentAddEventBinding!!.etEventLocation.setOnClickListener {
+
+        }
+
 
         fragmentAddEventBinding!!.btnAddEvent.setOnClickListener {
             //val eventName = fragmentAddEventBinding!!.etEventName.text.toString()
             //val eventDescription = fragmentAddEventBinding!!.etEventDescription.text.toString()
             //val eventLocation = fragmentAddEventBinding!!.etEventLocation.text.toString()
+            //val eventOrganizer = fragmentAddEventBinding!!.etEventOrganizer.text.toString()
 
+            val eventOrganizer = "Test organizer"
             val eventName = "TestEvent"
             val eventDescription = "TestDescription"
             val eventLocation = "TestLocation"
@@ -113,7 +128,7 @@ class AddEventFragment : Fragment() {
             //Adding Key
             val keyValue = Constant.databaseReference.child("events").push()
 
-            val eventData = Events(eventName,eventDescription,startDate,endDate,time,eventLocation)
+            val eventData = Events(eventName,eventDescription,startDate,endDate,time,eventLocation,eventOrganizer)
 
             //Adding pictures
             val ref = storageReference?.child("event")

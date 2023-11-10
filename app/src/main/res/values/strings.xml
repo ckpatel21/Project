@@ -31,5 +31,6 @@
     <string name="txtAddEventPoster">Add Event Poster</string>
     <string name="txtTime">Time</string>
     <string name="txt_want_to_change">Replace?</string>
+    <string name="event_organizer">Event Organizer</string>
 
 </resources>

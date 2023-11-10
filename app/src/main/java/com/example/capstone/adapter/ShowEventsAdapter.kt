@@ -1,5 +1,6 @@
 package com.example.capstone.adapter
 
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,10 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.capstone.R
 import com.example.capstone.model.Events
+import com.squareup.picasso.Picasso
+import java.io.InputStream
+import java.net.URL
+
 
 class ShowEventsAdapter(private val eventList: List<Events>, val shareBtnClickListener: ShareBtnClickListener, val layoutBtnClickListener : LayoutBtnClickListener) :
     RecyclerView.Adapter<ShowEventsAdapter.ViewHolder>() {
@@ -28,7 +33,9 @@ class ShowEventsAdapter(private val eventList: List<Events>, val shareBtnClickLi
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val eventViewModel = eventList[position]
 
-        //holder.eventPicture.setImageURI(Uri.parse(eventViewModel.pictures))
+        Picasso.get().load(eventViewModel.pictures).into(holder.eventPicture)
+
+        //holder.eventPicture.setIm(loadImageFromWebOperations(eventViewModel.pictures))
         holder.eventName.text = eventViewModel.eventName
         holder.eventDescription.text = eventViewModel.eventDescription
         holder.eventDate.text = eventViewModel.eventStartDate
@@ -45,6 +52,14 @@ class ShowEventsAdapter(private val eventList: List<Events>, val shareBtnClickLi
             if (layoutClickListener != null){
                 layoutClickListener?.onLayoutClick(position, eventViewModel)
             }
+        }
+    }
+    private fun loadImageFromWebOperations(url: String?): Drawable? {
+        return try {
+            val ins = URL(url).content as InputStream
+            Drawable.createFromStream(ins, "src name")
+        } catch (e: Exception) {
+            null
         }
     }
 
