@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">capstone</string>
+    <string name="app_name">The Explorer</string>
 
     <string name="profile">Profile</string>
     <string name="home">Home</string>
@@ -32,5 +32,7 @@
     <string name="txtTime">Time</string>
     <string name="txt_want_to_change">Replace?</string>
     <string name="event_organizer">Event Organizer</string>
+    <string name="close">Close\n</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

@@ -13,5 +13,6 @@ data class Events (
     val eventTime : String? = null,
     val eventLocation: String? = null,
     val eventOrganizer: String? = null,
+    val eventCategory : String? = null,
     val pictures : String? = null
 ) : Parcelable

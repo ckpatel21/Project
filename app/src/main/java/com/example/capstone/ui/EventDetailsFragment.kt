@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.capstone.databinding.FragmentEventDetailsBinding
 import com.example.capstone.model.Events
+import com.squareup.picasso.Picasso
 
 
 //Todo - Events details after clicking on specific event
@@ -36,6 +37,7 @@ class EventDetailsFragment : Fragment() {
         } else {
             arguments?.getParcelable<Events>("event")
         }
+        Picasso.get().load(data?.pictures).into(fragmentEventDetailsBinding?.eventPoster)
         fragmentEventDetailsBinding?.eventTitle?.text = data?.eventName
         fragmentEventDetailsBinding?.eventDate?.text = data?.eventStartDate
         fragmentEventDetailsBinding?.eventTime?.text = data?.eventTime

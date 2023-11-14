@@ -18,12 +18,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textViewAddPlace"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/profile"
-            android:textSize="@dimen/_24sp" />
 
         <ScrollView
             android:id="@+id/scrollView2"

@@ -1,5 +1,6 @@
 package com.example.capstone.ui
 
+import android.R
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
@@ -7,6 +8,8 @@ import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -14,6 +17,9 @@ import androidx.fragment.app.Fragment
 import com.example.capstone.databinding.FragmentAddEventBinding
 import com.example.capstone.model.Events
 import com.example.capstone.utils.Constant
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -36,6 +42,10 @@ class AddEventFragment : Fragment() {
     private var firebaseStore: FirebaseStorage? = null
     private var storageReference: StorageReference? = null
 
+    private lateinit var mGoogleMap: GoogleMap
+
+    //Save Category
+    private var category = "Select One"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -103,6 +113,21 @@ class AddEventFragment : Fragment() {
             fragmentAddEventBinding!!.tvTime.text = time
         }
 
+        //TODO
+        //Add Category
+        val adapter = ArrayAdapter(
+            requireContext(),
+            R.layout.simple_spinner_dropdown_item,
+            arrayOf("Party", "Trail", "Historical")
+        )
+        fragmentAddEventBinding!!.categoryDropdown.setAdapter(adapter)
+        fragmentAddEventBinding!!.categoryDropdown.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, _, position, id ->
+                // do something with the available information
+                category = fragmentAddEventBinding!!.categoryDropdown.text.toString()
+
+            }
+
         //Select picture
         fragmentAddEventBinding!!.imageBtnUploadPhoto.setOnClickListener {
             getPhotosFromGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
@@ -110,7 +135,7 @@ class AddEventFragment : Fragment() {
 
         //Set Location
         fragmentAddEventBinding!!.etEventLocation.setOnClickListener {
-
+            MapDialogFragment().show(childFragmentManager, "Map Fragment")
         }
 
 
@@ -124,11 +149,11 @@ class AddEventFragment : Fragment() {
             val eventName = "TestEvent"
             val eventDescription = "TestDescription"
             val eventLocation = "TestLocation"
-
+            val eventCategory = category
             //Adding Key
             val keyValue = Constant.databaseReference.child("events").push()
 
-            val eventData = Events(eventName,eventDescription,startDate,endDate,time,eventLocation,eventOrganizer)
+            val eventData = Events(eventName,eventDescription,startDate,endDate,time,eventLocation,eventOrganizer,eventCategory)
 
             //Adding pictures
             val ref = storageReference?.child("event")
@@ -172,14 +197,12 @@ class AddEventFragment : Fragment() {
     private val getPhotosFromGallery =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { eventUri: Uri? ->
 
-            picturesListUrl = eventUri!!
-            displayPictures(eventUri)
+            picturesListUrl = eventUri
+            eventUri?.let { displayPictures(it) }
         }
 
     private fun displayPictures(pictureUri: Uri) {
         fragmentAddEventBinding!!.eventPicturePoster.setImageURI(pictureUri)
         fragmentAddEventBinding!!.txtWantToChange.visibility = View.VISIBLE
     }
-
-
 }

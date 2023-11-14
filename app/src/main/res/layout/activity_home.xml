@@ -21,6 +21,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/_20dp"
         android:scrollIndicators="left"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
