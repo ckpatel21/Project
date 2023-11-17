@@ -143,6 +143,11 @@ class AddEventFragment : Fragment() {
             getPhotosFromGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
         }
 
+        //Replace Picture
+        fragmentAddEventBinding.txtWantToChange.setOnClickListener {
+            getPhotosFromGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
+        }
+
         //Set Location
         fragmentAddEventBinding.etEventLocation.setOnClickListener {
             MapDialogFragment().show(childFragmentManager, "Map Fragment")
@@ -214,9 +219,7 @@ class AddEventFragment : Fragment() {
                         key.child("eventStatus").setValue(false)
             */
         }
-        fragmentAddEventBinding.txtWantToChange.setOnClickListener {
-            getPhotosFromGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
-        }
+
     }
 
     private val getPhotosFromGallery =
@@ -283,6 +286,7 @@ class AddEventFragment : Fragment() {
             if (compressedImageFile != null) {
                 fragmentAddEventBinding.eventPicturePoster.setImageURI(compressedImageFile.toUri())
             }
+
         }
     }
 

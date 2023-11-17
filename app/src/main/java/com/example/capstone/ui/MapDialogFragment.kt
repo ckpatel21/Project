@@ -43,12 +43,13 @@ class MapDialogFragment : DialogFragment() {
     //Get location
     private val permissionId = 42
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var latitude = 0.0
-    private var longitude = 0.0
+    private var latitude = 43.466667
+    private var longitude = -80.516670
 
     private lateinit var mGoogleMap: GoogleMap
 
     private val callback = OnMapReadyCallback { mMap ->
+
         mGoogleMap = mMap
         mGoogleMap.addMarker(
             MarkerOptions().position(LatLng(latitude, longitude)).title("Current Location")
@@ -73,8 +74,8 @@ class MapDialogFragment : DialogFragment() {
             dismiss()
         }
         //Get location
-        //fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        //getLastLocation()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        getLastLocation()
         mapFragment?.getMapAsync(callback)
 
     }

@@ -63,8 +63,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="@dimen/_4dp"
-                                android:textSize="@dimen/_18sp"
-                                android:text="Virat Contractor" />
+                                android:textSize="@dimen/_18sp"/>
 
                             <TextView
                                 android:id="@+id/tvEmail"

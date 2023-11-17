@@ -85,7 +85,7 @@ class LoginActivity : AppCompatActivity() {
                         getSharedPreferences(LOGIN_CREDENTIAL, Context.MODE_PRIVATE)
                     val editor = sharedPreference.edit()
                     editor.putString("email", email)
-                    editor.putString("name", email)
+                    editor.putString("name", name)
                     editor.apply()
 
                     //Send data
