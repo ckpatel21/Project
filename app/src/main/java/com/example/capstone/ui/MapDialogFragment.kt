@@ -2,10 +2,11 @@ package com.example.capstone.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -13,12 +14,11 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import com.example.capstone.R
-import com.example.capstone.databinding.FragmentMapDialogBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -33,12 +33,13 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
 
-open class MapDialogFragment : DialogFragment() {
+class MapDialogFragment : DialogFragment() {
 
     private var mLocationRequest: LocationRequest? = null
 
     private val UPDATE_INTERVAL = (10 * 1000).toLong()  /* 10 secs */
     private val FASTEST_INTERVAL: Long = 2000 /* 2 sec */
+
     //Get location
     private val permissionId = 42
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -47,29 +48,14 @@ open class MapDialogFragment : DialogFragment() {
 
     private lateinit var mGoogleMap: GoogleMap
 
-    val mapDialogBinding : FragmentMapDialogBinding? = null
-
     private val callback = OnMapReadyCallback { mMap ->
         mGoogleMap = mMap
-        mGoogleMap.addMarker(MarkerOptions().position(LatLng(latitude, longitude)).title("Current Location"))
+        mGoogleMap.addMarker(
+            MarkerOptions().position(LatLng(latitude, longitude)).title("Current Location")
+        )
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(latitude, longitude)))
-
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        AlertDialog.Builder(requireContext())
-            .setView(R.layout.fragment_map_dialog)
-            .setPositiveButton(getString(R.string.cancel)) { _,_ -> }
-            .create()
-    }
-
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        AlertDialog.Builder(requireContext())
-            .setView(R.layout.fragment_map_dialog)
-            .setPositiveButton(getString(R.string.cancel)) { _,_ -> }
-            .create()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -79,10 +65,13 @@ open class MapDialogFragment : DialogFragment() {
         return inflater.inflate(R.layout.fragment_map_dialog, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?)  {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        view.findViewById<ImageView>(R.id.iv_close_map).setOnClickListener {
+            dismiss()
+        }
         //Get location
         //fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         //getLastLocation()
@@ -105,6 +94,7 @@ open class MapDialogFragment : DialogFragment() {
         }
         return false
     }
+
     @SuppressLint("MissingPermission")
     private fun getLastLocation() {
         if (checkPermissions()) {
@@ -147,6 +137,7 @@ open class MapDialogFragment : DialogFragment() {
             LocationManager.NETWORK_PROVIDER
         )
     }
+
     override fun onStart() {
         super.onStart()
         startLocationUpdates()
@@ -187,7 +178,7 @@ open class MapDialogFragment : DialogFragment() {
 
     private fun onLocationChanged(location: Location) {
         // create message for toast with updated latitude and longitudefa
-        val msg = "Updated Location: " + location.latitude  + " , " +location.longitude
+        val msg = "Updated Location: " + location.latitude + " , " + location.longitude
 
         // show toast message with updated location
         //Toast.makeText(this,msg, Toast.LENGTH_LONG).show()
@@ -195,7 +186,12 @@ open class MapDialogFragment : DialogFragment() {
         mGoogleMap.clear()
         mGoogleMap.addMarker(MarkerOptions().position(location).title("Current Location"))
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(location))
-        Toast.makeText(requireActivity(), "Debug XXXX "+msg, Toast.LENGTH_LONG).show()
+        Toast.makeText(requireActivity(), "Debug XXXX " + msg, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isAdded && !isDetached) dismiss()
     }
 
 

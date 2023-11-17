@@ -43,10 +43,9 @@ android {
 
 dependencies {
 
-    val fragment_version = "1.6.2"
-
     // Kotlin
-    implementation("androidx.fragment:fragment-ktx:$fragment_version")
+    val fragmentVersion = "1.6.2"
+    implementation("androidx.fragment:fragment-ktx:$fragmentVersion")
 
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -66,11 +65,16 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-database-ktx")
     implementation("com.google.android.material:material:1.9.0")
+
     // Add the dependency for the Cloud Storage library
     implementation("com.google.firebase:firebase-storage-ktx")
 
+    //Display picture
     implementation("com.squareup.picasso:picasso:2.71828")
+
     //Maps
     implementation("com.google.android.gms:play-services-maps:18.1.0")
 
+    //Picture Compressor
+    implementation("id.zelory:compressor:3.0.1")
 }

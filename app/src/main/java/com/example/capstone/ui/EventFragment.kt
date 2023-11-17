@@ -36,7 +36,7 @@ class EventFragment : Fragment() {
     private fun fetchEventDetails(): MutableLiveData<Response> {
         val mutableLiveData = MutableLiveData<Response>()
         val data = ArrayList<Events>()
-        Constant.databaseReference.child("events").get().addOnCompleteListener { task ->
+        Constant.databaseReference.child("events").orderByKey().get().addOnCompleteListener { task ->
             val response = Response()
             if (task.isSuccessful) {
                 val result = task.result
