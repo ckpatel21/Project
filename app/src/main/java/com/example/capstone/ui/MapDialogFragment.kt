@@ -5,8 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -20,15 +18,14 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import com.example.capstone.R
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
@@ -43,42 +40,87 @@ class MapDialogFragment : DialogFragment() {
     //Get location
     private val permissionId = 42
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var latitude = 43.466667
-    private var longitude = -80.516670
+    private var latitude = 0.0
+    private var longitude = 0.0
 
     private lateinit var mGoogleMap: GoogleMap
 
-    private val callback = OnMapReadyCallback { mMap ->
 
-        mGoogleMap = mMap
-        mGoogleMap.addMarker(
-            MarkerOptions().position(LatLng(latitude, longitude)).title("Current Location")
-        )
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(latitude, longitude)))
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_map_dialog, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        val mapFragment = childFragmentManager.findFragmentById(R.id.location) as SupportMapFragment?
         view.findViewById<ImageView>(R.id.iv_close_map).setOnClickListener {
             dismiss()
         }
-        //Get location
+        //Declaring fusedLocation
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        getLastLocation()
-        mapFragment?.getMapAsync(callback)
+
+        //Map Callback
+        mapFragment?.getMapAsync {mMap ->
+            mGoogleMap = mMap
+
+            //Get Last location
+            getLastLocation()
+
+            mGoogleMap.setOnMapLongClickListener {
+                mGoogleMap.clear()
+                mGoogleMap.addMarker(MarkerOptions().position(it).icon(BitmapDescriptorFactory
+                    .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)))
+            }
+        }
 
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isAdded && !isDetached) dismiss()
+    }
+
+
+    @SuppressLint("MissingPermission")
+    private fun getLastLocation() {
+        if (checkPermissions()) {
+            if (isLocationEnabled()) {
+
+                fusedLocationClient.lastLocation.addOnCompleteListener(requireActivity()) { task ->
+                    val location: Location? = task.result
+                    if (location != null) {
+                        latitude = location.latitude
+                        longitude = location.longitude
+                        mGoogleMap.addMarker(
+                            MarkerOptions().position(LatLng(latitude, longitude)).title("Current Location")
+                        )
+                        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latitude, longitude),17f))
+                    }
+                }
+            } else {
+                Toast.makeText(requireActivity(), "Turn on location", Toast.LENGTH_LONG).show()
+                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivity(intent)
+            }
+        } else {
+            requestPermissions()
+        }
+    }
+
+
+/*    private val callback = OnMapReadyCallback { mMap ->
+        mGoogleMap = mMap
+        mGoogleMap.addMarker(
+            MarkerOptions().position(LatLng(latitude, longitude)).title("Current Location")
+        )
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(latitude, longitude)))
+    }*/
 
     private fun checkPermissions(): Boolean {
         if (
@@ -95,29 +137,6 @@ class MapDialogFragment : DialogFragment() {
         }
         return false
     }
-
-    @SuppressLint("MissingPermission")
-    private fun getLastLocation() {
-        if (checkPermissions()) {
-            if (isLocationEnabled()) {
-
-                fusedLocationClient.lastLocation.addOnCompleteListener(requireActivity()) { task ->
-                    val location: Location? = task.result
-                    if (location != null) {
-                        latitude = location.latitude
-                        longitude = location.longitude
-                    }
-                }
-            } else {
-                Toast.makeText(requireActivity(), "Turn on location", Toast.LENGTH_LONG).show()
-                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                startActivity(intent)
-            }
-        } else {
-            requestPermissions()
-        }
-    }
-
     private fun requestPermissions() {
         ActivityCompat.requestPermissions(
             requireActivity(),
@@ -129,7 +148,6 @@ class MapDialogFragment : DialogFragment() {
         )
     }
 
-
     private fun isLocationEnabled(): Boolean {
         val locationManager: LocationManager =
             context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -138,62 +156,4 @@ class MapDialogFragment : DialogFragment() {
             LocationManager.NETWORK_PROVIDER
         )
     }
-
-    override fun onStart() {
-        super.onStart()
-        startLocationUpdates()
-    }
-
-    private fun startLocationUpdates() {
-        // initialize location request object
-        mLocationRequest = LocationRequest.create()
-        mLocationRequest!!.run {
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            interval = UPDATE_INTERVAL
-            setFastestInterval(FASTEST_INTERVAL)
-        }
-
-        // initialize locationo setting request builder object
-        val builder = LocationSettingsRequest.Builder()
-        builder.addLocationRequest(mLocationRequest!!)
-        val locationSettingsRequest = builder.build()
-
-        // initialize location service object
-        val settingsClient = LocationServices.getSettingsClient(requireActivity())
-        settingsClient.checkLocationSettings(locationSettingsRequest)
-
-        // call register location listener
-        registerLocationListener()
-    }
-
-    private fun registerLocationListener() {
-        // initialize location callback object
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(p0: LocationResult) {
-                p0.lastLocation?.let { onLocationChanged(it) }
-            }
-        }
-
-    }
-
-
-    private fun onLocationChanged(location: Location) {
-        // create message for toast with updated latitude and longitudefa
-        val msg = "Updated Location: " + location.latitude + " , " + location.longitude
-
-        // show toast message with updated location
-        //Toast.makeText(this,msg, Toast.LENGTH_LONG).show()
-        val location = LatLng(location.latitude, location.longitude)
-        mGoogleMap.clear()
-        mGoogleMap.addMarker(MarkerOptions().position(location).title("Current Location"))
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(location))
-        Toast.makeText(requireActivity(), "Debug XXXX " + msg, Toast.LENGTH_LONG).show()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (isAdded && !isDetached) dismiss()
-    }
-
-
 }

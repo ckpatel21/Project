@@ -11,10 +11,7 @@ import androidx.fragment.app.Fragment
 import com.example.capstone.R
 import com.example.capstone.databinding.FragmentProfileBinding
 import com.example.capstone.utils.Constant.Companion.LOGIN_CREDENTIAL
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.gms.auth.api.signin.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -24,9 +21,6 @@ class ProfileFragment : Fragment() {
     private var fragmentProfileBinding: FragmentProfileBinding? = null
     private lateinit var mGoogleSignInClient: GoogleSignInClient
 
-    private val auth by lazy {
-        FirebaseAuth.getInstance()
-    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
