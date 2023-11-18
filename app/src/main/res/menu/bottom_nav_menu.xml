@@ -2,23 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/home"
-        android:icon="@drawable/icon_home_bottom_navigation"
-        android:title="@string/home"  />
+        android:icon="@drawable/bottom_navigation_icon_home"
+        android:title="@string/home" />
     <item
         android:id="@+id/map"
-        android:icon="@drawable/icon_map_bottom_navigation"
-        android:title="@string/map"  />
+        android:icon="@drawable/bottom_navigation_icon_map"
+        android:title="@string/map" />
     <item
         android:id="@+id/profile"
-        android:icon="@drawable/icon_user_bottom_navigation"
+        android:icon="@drawable/bottom_navigation_icon_user"
         android:title="@string/profile" />
     <item
         android:id="@+id/place"
-        android:icon="@drawable/icon_place_bottom_navigation"
+        android:icon="@drawable/bottom_navigation_icon_place"
         android:title="@string/place" />
     <item
         android:id="@+id/event"
-        android:icon="@drawable/icon_event_bottom_navigation"
+        android:icon="@drawable/bottom_navigation_icon_event"
         android:title="@string/event" />
 
 </menu>
