@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">The Explorer</string>
+    <string name="app_name">capstone</string>
 
     <string name="profile">Profile</string>
     <string name="home">Home</string>
@@ -23,16 +23,5 @@
     <string name="txtOr">OR</string>
     <string name="txtSelectCategory">Select Category</string>
     <string name="title_the_explorer">The Explorer</string>
-    <string name="select_one_category">Select One Category</string>
-    <string name="event_location">Event Location</string>
-    <string name="add_feedback">Add Feedback</string>
-    <string name="notification">Notification</string>
-    <string name="txt_about_the_event">About the Event</string>
-    <string name="txtAddEventPoster">Add Event Poster</string>
-    <string name="txtTime">Time</string>
-    <string name="txt_want_to_change">Replace?</string>
-    <string name="event_organizer">Event Organizer</string>
-    <string name="close">Close\n</string>
-    <string name="cancel">Cancel</string>
 
 </resources>
