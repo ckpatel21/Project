@@ -10,7 +10,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var bottomNav : BottomNavigationView
+    private lateinit var bottomNav: BottomNavigationView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,8 +22,8 @@ class HomeActivity : AppCompatActivity() {
         val email = intent.getStringExtra("Email")
         val name = intent.getStringExtra("Name")
 
-        Log.d("Email",email.toString())
-        Log.d("Name",name.toString())
+        Log.d("Email", email.toString())
+        Log.d("Name", name.toString())
 
         //Default Fragment as Home
         loadFragment(EventFragment())
@@ -36,31 +37,37 @@ class HomeActivity : AppCompatActivity() {
                     loadFragment(EventFragment())
                     true
                 }
+
                 R.id.map -> {
                     loadFragment(MapsFragment())
                     true
                 }
+
                 R.id.profile -> {
                     loadFragment(ProfileFragment())
                     true
                 }
+
                 R.id.place -> {
                     loadFragment(AddPlaceFragment())
                     true
                 }
+
                 R.id.event -> {
                     loadFragment(AddEventFragment())
                     true
                 }
+
                 else -> {
                     false
                 }
             }
         }
     }
-    private  fun loadFragment(fragment: Fragment){
+
+    private fun loadFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.container,fragment)
+        transaction.replace(R.id.container, fragment)
         transaction.commit()
     }
 }
