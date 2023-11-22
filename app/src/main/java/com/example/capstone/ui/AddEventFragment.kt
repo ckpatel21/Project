@@ -1,12 +1,16 @@
 package com.example.capstone.ui
 
-import android.R
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.view.ContextMenu
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
@@ -17,7 +21,10 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
+import com.example.capstone.R
 import com.example.capstone.databinding.FragmentAddEventBinding
 import com.example.capstone.model.Events
 import com.example.capstone.utils.Constant
@@ -54,6 +61,8 @@ class AddEventFragment : Fragment() {
 
     private lateinit var mGoogleMap: GoogleMap
 
+    val REQUEST_CODE = 1
+
     //Save Category
     private var category = "Select One"
 
@@ -63,12 +72,19 @@ class AddEventFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         fragmentAddEventBinding = FragmentAddEventBinding.inflate(inflater, container, false)
+        Log.d("LifeCycle","onCreate")
+
         return fragmentAddEventBinding.root
+
     }
 
     @SuppressLint("SimpleDateFormat")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setHasOptionsMenu(true)
+
+        Log.d("LifeCycle","onViewCreated")
 
         firebaseStore = FirebaseStorage.getInstance()
         storageReference = FirebaseStorage.getInstance().reference
@@ -127,7 +143,8 @@ class AddEventFragment : Fragment() {
         //Add Category
         val adapter = ArrayAdapter(
             requireContext(),
-            R.layout.simple_spinner_dropdown_item,
+            //R.layout.simple_spinner_dropdown_item,
+            androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
             arrayOf("Party", "Trail", "Historical")
         )
         fragmentAddEventBinding.categoryDropdown.setAdapter(adapter)
@@ -150,8 +167,19 @@ class AddEventFragment : Fragment() {
 
         //Set Location
         fragmentAddEventBinding.etEventLocation.setOnClickListener {
-            MapDialogFragment().show(childFragmentManager, "Map Fragment")
+            val mapFragment = MapDialogFragment()
+            mapFragment.isCancelable = false
+            mapFragment.show(childFragmentManager, "Map Fragment")
         }
+
+        //
+        setFragmentResultListener("requestKey") { requestKey, bundle ->
+            // We use a String here, but any type that can be put in a Bundle is supported.
+            val result = bundle.getString("bundleKey")
+            // Do something with the result.
+            fragmentAddEventBinding.etEventLocation.text = result.toString()
+        }
+
 
 
         fragmentAddEventBinding.btnAddEvent.setOnClickListener {
@@ -222,6 +250,59 @@ class AddEventFragment : Fragment() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_info_icon,menu)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId){
+            R.id.infoDialog -> Toast.makeText(requireActivity(),"About Selected",Toast.LENGTH_SHORT).show()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("LifeCycle","onDestroy")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.d("LifeCycle","onDetach")
+    }
+    override fun onStart() {
+        super.onStart()
+        Log.d("LifeCycle","onStart")
+
+        setFragmentResultListener("requestKey") { requestKey, bundle ->
+            // We use a String here, but any type that can be put in a Bundle is supported.
+            val result = bundle.getString("bundleKey")
+            // Do something with the result.
+            fragmentAddEventBinding.etEventLocation.text = result.toString()
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Log.d("LifeCycle","onAttach")
+
+        setFragmentResultListener("requestKey") { requestKey, bundle ->
+            // We use a String here, but any type that can be put in a Bundle is supported.
+            val result = bundle.getString("bundleKey")
+            // Do something with the result.
+            fragmentAddEventBinding.etEventLocation.text = result.toString()
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        Log.d("LifeCycle","onResume")
+
+        setFragmentResultListener("requestKey") { requestKey, bundle ->
+            // We use a String here, but any type that can be put in a Bundle is supported.
+            val result = bundle.getString("bundleKey")
+            // Do something with the result.
+            fragmentAddEventBinding.etEventLocation.text = result.toString()
+        }
+    }
     private val getPhotosFromGallery =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { eventUri: Uri? ->
 

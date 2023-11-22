@@ -33,12 +33,12 @@ class HomeActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener {
 
             when (it.itemId) {
-                R.id.home -> {
+                R.id.exploreEvents -> {
                     loadFragment(EventFragment())
                     true
                 }
 
-                R.id.map -> {
+                R.id.explorePlaces -> {
                     loadFragment(MapsFragment())
                     true
                 }

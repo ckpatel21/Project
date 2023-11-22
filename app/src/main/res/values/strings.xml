@@ -4,8 +4,8 @@
     <string name="profile">Profile</string>
     <string name="home">Home</string>
     <string name="logout">Logout</string>
-    <string name="place">Place</string>
-    <string name="event">Event</string>
+    <string name="place">Add Place</string>
+    <string name="event">Add Event</string>
     <string name="place_name">Place name</string>
     <string name="place_description">Place Description</string>
     <string name="submit">Submit</string>
@@ -15,7 +15,7 @@
     <string name="event_description">Event Description</string>
     <string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>
-    <string name="time">Time\n</string>
+    <string name="time">Time</string>
     <string name="hello_blank_fragment">test</string>
     <string name="btnAddEvent">Add Event</string>
     <string name="btnAddPlace">Add Place</string>
@@ -32,7 +32,12 @@
     <string name="txtTime">Time</string>
     <string name="txt_want_to_change">Replace?</string>
     <string name="event_organizer">Event Organizer</string>
-    <string name="close">Close\n</string>
+    <string name="close">Close</string>
     <string name="cancel">Cancel</string>
+    <string name="places">Places</string>
+    <string name="events">Events</string>
+    <string name="txt_location">Event Location</string>
+    <string name="add">Add</string>
+    <string name="api_map_key">AIzaSyCMnPvrKokU_KOK1BTIKkF9fZitHL-LuT4</string>
 
 </resources>

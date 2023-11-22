@@ -5,6 +5,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -12,25 +14,27 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import com.example.capstone.R
+import com.example.capstone.databinding.FragmentMapDialogBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-
+import java.util.Locale
 
 class MapDialogFragment : DialogFragment() {
+
+    private lateinit var fragmentMapDialogBinding: FragmentMapDialogBinding
 
     private var mLocationRequest: LocationRequest? = null
 
@@ -43,25 +47,43 @@ class MapDialogFragment : DialogFragment() {
     private var latitude = 0.0
     private var longitude = 0.0
 
+    lateinit var latLng : LatLng
     private lateinit var mGoogleMap: GoogleMap
 
+    lateinit var geocoder: Geocoder
+    var addresses: List<Address>? = null
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map_dialog, container, false)
+        fragmentMapDialogBinding = FragmentMapDialogBinding.inflate(inflater, container, false)
+        return fragmentMapDialogBinding.root
+    }
+
+    private fun getAddress(latLng: LatLng): String {
+        addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+
+        val address = addresses?.get(0)?.getAddressLine(0)
+        val city = addresses?.get(0)?.locality
+
+        return address + city
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.location) as SupportMapFragment?
-        view.findViewById<ImageView>(R.id.iv_close_map).setOnClickListener {
+        fragmentMapDialogBinding.ivCloseMap.setOnClickListener {
             dismiss()
         }
+
+        //Declaring Geo coder
+        geocoder = Geocoder(requireActivity(), Locale.getDefault())
+
+
         //Declaring fusedLocation
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
@@ -74,12 +96,23 @@ class MapDialogFragment : DialogFragment() {
 
             mGoogleMap.setOnMapLongClickListener {
                 mGoogleMap.clear()
-                mGoogleMap.addMarker(MarkerOptions().position(it).icon(BitmapDescriptorFactory
-                    .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)))
+                val address = getAddress(it)
+                mGoogleMap.addMarker(MarkerOptions().position(it).title(address).icon(BitmapDescriptorFactory
+                    .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)))?.showInfoWindow()
+                latLng = it
+
             }
         }
+        fragmentMapDialogBinding.btnAddLocation.setOnClickListener {
+
+            // Use the Kotlin extension in the fragment-ktx artifact.
+            setFragmentResult("requestKey", bundleOf("bundleKey" to "latLng"))
+            dismiss()
+        }
+
 
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
@@ -99,7 +132,7 @@ class MapDialogFragment : DialogFragment() {
                         longitude = location.longitude
                         mGoogleMap.addMarker(
                             MarkerOptions().position(LatLng(latitude, longitude)).title("Current Location")
-                        )
+                        )?.showInfoWindow()
                         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latitude, longitude),17f))
                     }
                 }
