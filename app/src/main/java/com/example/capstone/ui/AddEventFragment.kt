@@ -204,6 +204,7 @@ class AddEventFragment : Fragment() {
                 time,
                 eventLocation,
                 eventOrganizer,
+                false,
                 eventCategory
             )
 
@@ -222,6 +223,9 @@ class AddEventFragment : Fragment() {
                 keyValue.setValue(eventData).addOnSuccessListener {
                     Toast.makeText(requireActivity(), "Successfully added!", Toast.LENGTH_LONG)
                         .show()
+                    fragmentAddEventBinding.etEventName.text?.clear()
+                    fragmentAddEventBinding.etEventDescription.text?.clear()
+                    fragmentAddEventBinding.etEventOrganizer.text?.clear()
                 }
 
             } else {
@@ -342,7 +346,6 @@ class AddEventFragment : Fragment() {
         return MimeTypeMap.getSingleton().getExtensionFromMimeType(fileType)
     }
 
-    @Throws(IOException::class)
     private fun copy(source: InputStream, target: OutputStream) {
         val buf = ByteArray(8192)
         var length: Int

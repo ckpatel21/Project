@@ -18,7 +18,8 @@ import com.google.firebase.ktx.Firebase
 
 class ProfileFragment : Fragment() {
 
-    private var fragmentProfileBinding: FragmentProfileBinding? = null
+    private lateinit var fragmentProfileBinding: FragmentProfileBinding
+
     private lateinit var mGoogleSignInClient: GoogleSignInClient
 
     override fun onCreateView(
@@ -27,7 +28,7 @@ class ProfileFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         fragmentProfileBinding = FragmentProfileBinding.inflate(inflater, container, false)
-        return fragmentProfileBinding!!.root
+        return fragmentProfileBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,10 +44,16 @@ class ProfileFragment : Fragment() {
             requireActivity().getSharedPreferences(LOGIN_CREDENTIAL, Context.MODE_PRIVATE)
         val emailData = sharedPreference.getString("email", "")
         val nameData = sharedPreference.getString("name", "")
-        fragmentProfileBinding?.tvEmail?.text = emailData.toString()
-        fragmentProfileBinding?.tvName?.text = nameData.toString()
+        fragmentProfileBinding.tvEmail.text = emailData.toString()
+        fragmentProfileBinding.tvName.text = nameData.toString()
 
-        fragmentProfileBinding?.btnLogout?.setOnClickListener {
+        fragmentProfileBinding.tvAddFeedback.setOnClickListener {
+            beginTransaction(AddFeedbackFragment())
+        }
+        fragmentProfileBinding.tvAboutUs.setOnClickListener {
+            beginTransaction(AboutUsFragment())
+        }
+        fragmentProfileBinding.btnLogout.setOnClickListener {
             sharedPreference?.edit {
                 this.clear()
             }
@@ -57,5 +64,12 @@ class ProfileFragment : Fragment() {
                 //finish()
             }
         }
+    }
+
+    fun beginTransaction(fragment : Fragment){
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, fragment)
+        transaction.addToBackStack("tag")
+        transaction.commit()
     }
 }

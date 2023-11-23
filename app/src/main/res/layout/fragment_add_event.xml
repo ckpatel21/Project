@@ -42,7 +42,9 @@
                             android:background="@drawable/edittext_background"
                             android:ems="10"
                             android:hint="@string/event_name"
+                            android:minHeight="@dimen/_48dp"
                             android:padding="@dimen/_10dp"
+                            android:textColorHint="#757575"
                             android:textSize="@dimen/_16sp" />
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -56,7 +58,9 @@
                             android:inputType="text"
                             android:lines="4"
                             android:maxLines="4"
+                            android:minHeight="48dp"
                             android:padding="@dimen/_10dp"
+                            android:textColorHint="#757575"
                             android:textSize="@dimen/_16sp" />
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -70,7 +74,9 @@
                             android:inputType="text"
                             android:lines="4"
                             android:maxLines="4"
+                            android:minHeight="48dp"
                             android:padding="@dimen/_10dp"
+                            android:textColorHint="#757575"
                             android:textSize="@dimen/_16sp" />
 
                     </LinearLayout>
@@ -136,7 +142,9 @@
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:hint="@string/start_date"
-                                android:paddingStart="@dimen/_10dp" />
+                                android:paddingStart="@dimen/_10dp"
+                                android:textColorHint="#757575"
+                                tools:ignore="RtlSymmetry" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -169,7 +177,9 @@
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:hint="@string/end_date"
-                                android:paddingStart="@dimen/_10dp" />
+                                android:paddingStart="@dimen/_10dp"
+                                android:textColorHint="#757575"
+                                tools:ignore="RtlSymmetry" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -202,7 +212,9 @@
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:hint="@string/txtTime"
-                                android:paddingStart="@dimen/_10dp" />
+                                android:paddingStart="@dimen/_10dp"
+                                android:textColorHint="#757575"
+                                tools:ignore="RtlSymmetry" />
 
                         </LinearLayout>
                     </LinearLayout>
@@ -222,7 +234,9 @@
                             android:drawablePadding="@dimen/_10dp"
                             android:ems="10"
                             android:hint="@string/event_location"
-                            android:inputType="text" />
+                            android:inputType="text"
+                            android:textColorHint="#757575"
+                            tools:ignore="TouchTargetSizeCheck" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -286,7 +300,8 @@
                                 android:id="@+id/eventPicturePoster"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1" />
+                                android:layout_weight="1"
+                                android:importantForAccessibility="no" />
                         </LinearLayout>
                     </LinearLayout>
 
