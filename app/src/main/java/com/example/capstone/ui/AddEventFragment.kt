@@ -3,7 +3,10 @@ package com.example.capstone.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
+import android.location.Address
+import android.location.Geocoder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.ContextMenu
@@ -29,6 +32,7 @@ import com.example.capstone.databinding.FragmentAddEventBinding
 import com.example.capstone.model.Events
 import com.example.capstone.utils.Constant
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -47,6 +51,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 import java.util.TimeZone
 
 
@@ -60,6 +65,15 @@ class AddEventFragment : Fragment() {
     private var storageReference: StorageReference? = null
 
     private lateinit var mGoogleMap: GoogleMap
+
+    lateinit var geocoder: Geocoder
+    var addresses: List<Address>? = null
+
+    private var latitude : Double = 0.0
+    private var longitude : Double = 0.0
+
+    //  val latLng = LatLng(lat!!.toDouble(),lng!!.toDouble())
+    private lateinit var address : String
 
     val REQUEST_CODE = 1
 
@@ -84,7 +98,8 @@ class AddEventFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
-        Log.d("LifeCycle","onViewCreated")
+        //Declaring Geo coder
+        geocoder = Geocoder(requireActivity(), Locale.getDefault())
 
         firebaseStore = FirebaseStorage.getInstance()
         storageReference = FirebaseStorage.getInstance().reference
@@ -169,15 +184,21 @@ class AddEventFragment : Fragment() {
         fragmentAddEventBinding.etEventLocation.setOnClickListener {
             val mapFragment = MapDialogFragment()
             mapFragment.isCancelable = false
-            mapFragment.show(childFragmentManager, "Map Fragment")
+            mapFragment.show(childFragmentManager, null)
         }
 
         //
-        setFragmentResultListener("requestKey") { requestKey, bundle ->
+        childFragmentManager.setFragmentResultListener("requestKey", this) { requestKey, bundle ->
             // We use a String here, but any type that can be put in a Bundle is supported.
-            val result = bundle.getString("bundleKey")
+
+            latitude = bundle.getDouble("latitude")
+            longitude = bundle.getDouble("longitude")
+
+            //  val latLng = LatLng(lat!!.toDouble(),lng!!.toDouble())
+            address = getAddress(LatLng(latitude, longitude))
+
             // Do something with the result.
-            fragmentAddEventBinding.etEventLocation.text = result.toString()
+            fragmentAddEventBinding.etEventLocation.text = address
         }
 
 
@@ -191,7 +212,7 @@ class AddEventFragment : Fragment() {
             val eventOrganizer = "Test organizer"
             val eventName = "TestEvent"
             val eventDescription = "TestDescription"
-            val eventLocation = "TestLocation"
+            val eventLocation = address
             val eventCategory = category
             //Adding Key
             val keyValue = Constant.databaseReference.child("events").push()
@@ -203,6 +224,8 @@ class AddEventFragment : Fragment() {
                 endDate,
                 time,
                 eventLocation,
+                latitude,
+                longitude,
                 eventOrganizer,
                 false,
                 eventCategory
@@ -254,6 +277,12 @@ class AddEventFragment : Fragment() {
 
     }
 
+    private fun getAddress(latLng: LatLng): String {
+        addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+
+        val address = addresses?.get(0)?.getAddressLine(0)
+        return address!!
+    }
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_info_icon,menu)
@@ -264,49 +293,7 @@ class AddEventFragment : Fragment() {
         }
         return super.onOptionsItemSelected(item)
     }
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("LifeCycle","onDestroy")
-    }
 
-    override fun onDetach() {
-        super.onDetach()
-        Log.d("LifeCycle","onDetach")
-    }
-    override fun onStart() {
-        super.onStart()
-        Log.d("LifeCycle","onStart")
-
-        setFragmentResultListener("requestKey") { requestKey, bundle ->
-            // We use a String here, but any type that can be put in a Bundle is supported.
-            val result = bundle.getString("bundleKey")
-            // Do something with the result.
-            fragmentAddEventBinding.etEventLocation.text = result.toString()
-        }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Log.d("LifeCycle","onAttach")
-
-        setFragmentResultListener("requestKey") { requestKey, bundle ->
-            // We use a String here, but any type that can be put in a Bundle is supported.
-            val result = bundle.getString("bundleKey")
-            // Do something with the result.
-            fragmentAddEventBinding.etEventLocation.text = result.toString()
-        }
-    }
-    override fun onResume() {
-        super.onResume()
-        Log.d("LifeCycle","onResume")
-
-        setFragmentResultListener("requestKey") { requestKey, bundle ->
-            // We use a String here, but any type that can be put in a Bundle is supported.
-            val result = bundle.getString("bundleKey")
-            // Do something with the result.
-            fragmentAddEventBinding.etEventLocation.text = result.toString()
-        }
-    }
     private val getPhotosFromGallery =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { eventUri: Uri? ->
 

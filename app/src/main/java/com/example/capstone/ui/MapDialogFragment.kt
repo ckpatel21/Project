@@ -47,7 +47,7 @@ class MapDialogFragment : DialogFragment() {
     private var latitude = 0.0
     private var longitude = 0.0
 
-    lateinit var latLng : LatLng
+    private lateinit var latLng : LatLng
     private lateinit var mGoogleMap: GoogleMap
 
     lateinit var geocoder: Geocoder
@@ -67,9 +67,8 @@ class MapDialogFragment : DialogFragment() {
         addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
 
         val address = addresses?.get(0)?.getAddressLine(0)
-        val city = addresses?.get(0)?.locality
 
-        return address + city
+        return address!!
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -97,16 +96,15 @@ class MapDialogFragment : DialogFragment() {
             mGoogleMap.setOnMapLongClickListener {
                 mGoogleMap.clear()
                 val address = getAddress(it)
+                latLng = it
                 mGoogleMap.addMarker(MarkerOptions().position(it).title(address).icon(BitmapDescriptorFactory
                     .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)))?.showInfoWindow()
-                latLng = it
+
 
             }
         }
         fragmentMapDialogBinding.btnAddLocation.setOnClickListener {
-
-            // Use the Kotlin extension in the fragment-ktx artifact.
-            setFragmentResult("requestKey", bundleOf("bundleKey" to "latLng"))
+            parentFragmentManager.setFragmentResult("requestKey", bundleOf("latitude" to latLng.latitude,"longitude" to latLng.longitude))
             dismiss()
         }
 

@@ -233,6 +233,8 @@
                             android:drawableStart="@drawable/textview_icon_location_24"
                             android:drawablePadding="@dimen/_10dp"
                             android:ems="10"
+                            android:maxLines="2"
+                            android:editable="false"
                             android:hint="@string/event_location"
                             android:inputType="text"
                             android:textColorHint="#757575"

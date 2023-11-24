@@ -12,6 +12,8 @@ data class Events (
     val eventEndDate: String? = null,
     val eventTime : String? = null,
     val eventLocation: String? = null,
+    val eventLatitude : Double? = null,
+    val eventLongitude : Double? = null,
     val eventOrganizer: String? = null,
     val eventStatus : Boolean? = null,
     val eventCategory : String? = null,

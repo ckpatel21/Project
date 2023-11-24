@@ -27,7 +27,9 @@ class EventDetailsFragment : Fragment() {
 
     private lateinit var fragmentEventDetailsBinding: FragmentEventDetailsBinding
 
-    private lateinit var latLng: LatLng
+    private var latitude : Double = 0.0
+
+    private var longitude : Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,17 +59,18 @@ class EventDetailsFragment : Fragment() {
         fragmentEventDetailsBinding.eventTime.text = data?.eventTime
         fragmentEventDetailsBinding.eventLocation.text = data?.eventLocation
         fragmentEventDetailsBinding.eventDescription.text = data?.eventDescription
-
+        latitude = data?.eventLatitude!!
+        longitude = data.eventLongitude!!
         mapFragment?.getMapAsync(callback)
 
     }
 
     private val callback = OnMapReadyCallback { mMap ->
         Log.d("OnReady","OnMapReadyCallback")
-        val sydney = LatLng(43.45018919889245, -80.57727018835895)
+        val eventLocation = LatLng(latitude, longitude)
         mMap.addMarker(
             MarkerOptions()
-                .position(sydney)
+                .position(eventLocation)
                 .title("Event Location")
         )
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(43.45018919889245, -80.57727018835895),15f))

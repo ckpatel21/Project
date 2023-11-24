@@ -40,6 +40,6 @@
     <string name="add">Add</string>
     <string name="txt_about_us">About Us</string>
     <string name="txt_message">Message/Feedback</string>
-    <string name="about_us_checkbox">Whould you like to provide email id along with the feedback?</string>
+    <string name="about_us_checkbox">Would you like to provide email id along with the feedback?</string>
 
 </resources>
