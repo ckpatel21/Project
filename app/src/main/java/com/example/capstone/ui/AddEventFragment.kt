@@ -1,6 +1,7 @@
 package com.example.capstone.ui
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.location.Address
@@ -16,9 +17,12 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.webkit.MimeTypeMap
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +33,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import com.example.capstone.R
 import com.example.capstone.databinding.FragmentAddEventBinding
+import com.example.capstone.model.EventCategory
 import com.example.capstone.model.Events
 import com.example.capstone.utils.Constant
 import com.google.android.gms.maps.GoogleMap
@@ -36,6 +41,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import id.zelory.compressor.Compressor
@@ -50,6 +58,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.text.SimpleDateFormat
+import java.util.ArrayList
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
@@ -86,8 +95,6 @@ class AddEventFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         fragmentAddEventBinding = FragmentAddEventBinding.inflate(inflater, container, false)
-        Log.d("LifeCycle","onCreate")
-
         return fragmentAddEventBinding.root
 
     }
@@ -155,12 +162,29 @@ class AddEventFragment : Fragment() {
         }
 
         //TODO
+        val eventCategoryArrayList = ArrayList<String>()
+
+        Constant.databaseReference.child("event_categories").orderByKey().addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    for(data in snapshot.children){
+                        val eventCategory = data.getValue(EventCategory::class.java)
+                        eventCategory?.categoryName?.let { eventCategoryArrayList.add(it) }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+        })
         //Add Category
         val adapter = ArrayAdapter(
             requireContext(),
             //R.layout.simple_spinner_dropdown_item,
             androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
-            arrayOf("Party", "Trail", "Historical")
+            //arrayOf("Party", "Trail", "Historical")
+            eventCategoryArrayList
         )
         fragmentAddEventBinding.categoryDropdown.setAdapter(adapter)
         fragmentAddEventBinding.categoryDropdown.onItemClickListener =
@@ -170,6 +194,7 @@ class AddEventFragment : Fragment() {
 
             }
 
+        //End - Add Category
         //Select picture
         fragmentAddEventBinding.imageBtnUploadPhoto.setOnClickListener {
             getPhotosFromGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
@@ -289,7 +314,34 @@ class AddEventFragment : Fragment() {
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
-            R.id.infoDialog -> Toast.makeText(requireActivity(),"About Selected",Toast.LENGTH_SHORT).show()
+            R.id.infoDialog -> {
+                val dialog = Dialog(requireActivity())
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog.setCancelable(true)
+                dialog.setContentView(R.layout.layout_info_dialog)
+
+                val body = dialog.findViewById(R.id.tvInfo) as TextView
+                val closeButton = dialog.findViewById(R.id.iv_close_map) as ImageView
+
+                body.text = "Add event information. Please provide the details of the event, including the event name, date, time, location, and any other relevant information you would like to include in description. For the location, once you will click on Event location, Map dialog will pop up, where you can select any location by long press and you will see address details, click on Add button once you identify the location. Once you have added the details, Select the appropriate poster for your event and click the button Add Event!"
+
+                closeButton.setOnClickListener {
+                    dialog.dismiss()
+                }
+
+
+               /* val yesBtn = dialog.findViewById(R.id.yesBtn) as Button
+                yesBtn.setOnClickListener {
+                    dialog.dismiss()
+                }
+
+                val noBtn = dialog.findViewById(R.id.noBtn) as Button
+                noBtn.setOnClickListener {
+                    dialog.dismiss()
+                }*/
+
+                dialog.show()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -297,13 +349,15 @@ class AddEventFragment : Fragment() {
     private val getPhotosFromGallery =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { eventUri: Uri? ->
 
-            picturesListUrl = eventUri
+            /*picturesListUrl = eventUri
             //Compress picture
             compressPicture(picturesListUrl)
-            eventUri?.let { displayPictures() }
+            eventUri?.let { displayPictures() }*/
+            picturesListUrl = eventUri
+            eventUri?.let { displayPictures(it) }
         }
 
-    private fun fileFromContentUri(context: Context, contentUri: Uri): File {
+   /* private fun fileFromContentUri(context: Context, contentUri: Uri): File {
         // Preparing Temp file name
         val fileExtension = getFileExtension(context, contentUri)
         val fileName = "temp_file" + if (fileExtension != null) ".$fileExtension" else ""
@@ -360,8 +414,10 @@ class AddEventFragment : Fragment() {
 
         }
     }
+    */
 
-    private fun displayPictures() {
+    private fun displayPictures(pictureUri: Uri) {
+        fragmentAddEventBinding.eventPicturePoster.setImageURI(pictureUri)
         fragmentAddEventBinding.txtWantToChange.visibility = View.VISIBLE
     }
 }

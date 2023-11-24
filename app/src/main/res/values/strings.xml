@@ -41,5 +41,10 @@
     <string name="txt_about_us">About Us</string>
     <string name="txt_message">Message/Feedback</string>
     <string name="about_us_checkbox">Would you like to provide email id along with the feedback?</string>
+    <string name="txt_information">Information</string>
+    <string name="txt_info_add_event">Add event information. Please provide the details of the event, including the event name, date, time, location, and any other relevant information you would like to include in description. For the location, once you will click on Event location, Map dialog will pop up, where you can select any location by long press and you will see address details, click on Add button once you identify the location. Once you have added the details, Select the appropriate poster for your event and click the button Add Event!</string>
+    <string name="txt_title_about">Welcome to The Explorer!</string>
+    <string name="txt_body_about">We are a passionate team of four developers dedicated to creating an immersive and dynamic platform that allows you to explore the world around you. Our journey began with a shared vision: to empower users to discover new places and events with ease.</string>
+    <string name="txt_mission_about">Our Mission: At Explorer, we believe in the power of exploration. We want to inspire you to step outside your comfort zone and discover the incredible diversity of places and events that surround you. Our application is designed to be your trusted companion on this journey, providing a seamless and enriching experience.</string>
 
 </resources>

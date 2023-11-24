@@ -6,18 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.capstone.R
+import com.example.capstone.databinding.FragmentAboutUsBinding
+import com.example.capstone.databinding.FragmentAddEventBinding
 
 
 class AboutUsFragment : Fragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
+    private lateinit var fragmentAboutUsBinding : FragmentAboutUsBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_about_us, container, false)
+        fragmentAboutUsBinding = FragmentAboutUsBinding.inflate(inflater, container, false)
+        return fragmentAboutUsBinding.root
     }
+
 }

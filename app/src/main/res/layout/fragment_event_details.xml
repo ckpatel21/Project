@@ -120,7 +120,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingStart="@dimen/_10dp"
-                            app:srcCompat="@drawable/location_" />
+                            app:srcCompat="@drawable/location_60" />
                     </LinearLayout>
 
                     <LinearLayout

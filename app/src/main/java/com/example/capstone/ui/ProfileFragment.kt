@@ -53,6 +53,7 @@ class ProfileFragment : Fragment() {
         fragmentProfileBinding.tvAboutUs.setOnClickListener {
             beginTransaction(AboutUsFragment())
         }
+
         fragmentProfileBinding.btnLogout.setOnClickListener {
             sharedPreference?.edit {
                 this.clear()
@@ -66,7 +67,7 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    fun beginTransaction(fragment : Fragment){
+    private fun beginTransaction(fragment : Fragment){
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container, fragment)
         transaction.addToBackStack("tag")

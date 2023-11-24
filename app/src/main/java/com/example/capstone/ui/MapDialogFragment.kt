@@ -126,6 +126,7 @@ class MapDialogFragment : DialogFragment() {
                 fusedLocationClient.lastLocation.addOnCompleteListener(requireActivity()) { task ->
                     val location: Location? = task.result
                     if (location != null) {
+                        latLng = LatLng(location.latitude,location.longitude)
                         latitude = location.latitude
                         longitude = location.longitude
                         mGoogleMap.addMarker(

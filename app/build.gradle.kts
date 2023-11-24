@@ -1,3 +1,5 @@
+
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -11,6 +13,7 @@ android {
     compileSdk = 33
 
     defaultConfig {
+
         applicationId = "com.example.capstone"
         minSdk = 30
         targetSdk = 33
@@ -43,6 +46,9 @@ android {
 
 dependencies {
 
+    implementation("androidx.test:core-ktx:1.5.0")
+    debugImplementation("androidx.fragment:fragment-testing:1.6.2")
+
     // Kotlin
     val fragmentVersion = "1.6.2"
     implementation("androidx.fragment:fragment-ktx:$fragmentVersion")
@@ -56,9 +62,13 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.6.1")
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
+    testImplementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.0")
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation("androidx.test.ext:junit:1.1.5")
+    implementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation("androidx.test:core:1.5.0")
+    implementation("androidx.test:rules:1.5.0")
+    implementation("androidx.test:runner:1.5.2")
 
     //Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.2.3"))

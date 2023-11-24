@@ -37,7 +37,6 @@ class EventDetailsFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         fragmentEventDetailsBinding = FragmentEventDetailsBinding.inflate(inflater, container, false)
-        Log.d("LifeCycle","onCreate")
         return fragmentEventDetailsBinding.root
     }
 
@@ -73,7 +72,7 @@ class EventDetailsFragment : Fragment() {
                 .position(eventLocation)
                 .title("Event Location")
         )
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(43.45018919889245, -80.57727018835895),15f))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latitude, longitude),15f))
 
         /*mMap.setOnMapClickListener {
             val uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?q=loc:\" ${it.latitude} ${it.longitude}")
