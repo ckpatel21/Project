@@ -1,30 +1,49 @@
 package com.example.capstone.ui
 
-import android.R
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.graphics.Bitmap
+import android.location.Address
+import android.location.Geocoder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.ContextMenu
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.webkit.MimeTypeMap
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
+import com.example.capstone.R
 import com.example.capstone.databinding.FragmentAddEventBinding
+import com.example.capstone.model.EventCategory
 import com.example.capstone.model.Events
 import com.example.capstone.utils.Constant
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import id.zelory.compressor.Compressor
@@ -39,7 +58,9 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.text.SimpleDateFormat
+import java.util.ArrayList
 import java.util.Calendar
+import java.util.Locale
 import java.util.TimeZone
 
 
@@ -54,6 +75,17 @@ class AddEventFragment : Fragment() {
 
     private lateinit var mGoogleMap: GoogleMap
 
+    lateinit var geocoder: Geocoder
+    var addresses: List<Address>? = null
+
+    private var latitude : Double = 0.0
+    private var longitude : Double = 0.0
+
+    //  val latLng = LatLng(lat!!.toDouble(),lng!!.toDouble())
+    private lateinit var address : String
+
+    val REQUEST_CODE = 1
+
     //Save Category
     private var category = "Select One"
 
@@ -64,11 +96,17 @@ class AddEventFragment : Fragment() {
         // Inflate the layout for this fragment
         fragmentAddEventBinding = FragmentAddEventBinding.inflate(inflater, container, false)
         return fragmentAddEventBinding.root
+
     }
 
     @SuppressLint("SimpleDateFormat")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setHasOptionsMenu(true)
+
+        //Declaring Geo coder
+        geocoder = Geocoder(requireActivity(), Locale.getDefault())
 
         firebaseStore = FirebaseStorage.getInstance()
         storageReference = FirebaseStorage.getInstance().reference
@@ -124,11 +162,29 @@ class AddEventFragment : Fragment() {
         }
 
         //TODO
+        val eventCategoryArrayList = ArrayList<String>()
+
+        Constant.databaseReference.child("event_categories").orderByKey().addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    for(data in snapshot.children){
+                        val eventCategory = data.getValue(EventCategory::class.java)
+                        eventCategory?.categoryName?.let { eventCategoryArrayList.add(it) }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+        })
         //Add Category
         val adapter = ArrayAdapter(
             requireContext(),
-            R.layout.simple_spinner_dropdown_item,
-            arrayOf("Party", "Trail", "Historical")
+            //R.layout.simple_spinner_dropdown_item,
+            androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+            //arrayOf("Party", "Trail", "Historical")
+            eventCategoryArrayList
         )
         fragmentAddEventBinding.categoryDropdown.setAdapter(adapter)
         fragmentAddEventBinding.categoryDropdown.onItemClickListener =
@@ -138,6 +194,7 @@ class AddEventFragment : Fragment() {
 
             }
 
+        //End - Add Category
         //Select picture
         fragmentAddEventBinding.imageBtnUploadPhoto.setOnClickListener {
             getPhotosFromGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
@@ -150,8 +207,25 @@ class AddEventFragment : Fragment() {
 
         //Set Location
         fragmentAddEventBinding.etEventLocation.setOnClickListener {
-            MapDialogFragment().show(childFragmentManager, "Map Fragment")
+            val mapFragment = MapDialogFragment()
+            mapFragment.isCancelable = false
+            mapFragment.show(childFragmentManager, null)
         }
+
+        //
+        childFragmentManager.setFragmentResultListener("requestKey", this) { requestKey, bundle ->
+            // We use a String here, but any type that can be put in a Bundle is supported.
+
+            latitude = bundle.getDouble("latitude")
+            longitude = bundle.getDouble("longitude")
+
+            //  val latLng = LatLng(lat!!.toDouble(),lng!!.toDouble())
+            address = getAddress(LatLng(latitude, longitude))
+
+            // Do something with the result.
+            fragmentAddEventBinding.etEventLocation.text = address
+        }
+
 
 
         fragmentAddEventBinding.btnAddEvent.setOnClickListener {
@@ -163,7 +237,7 @@ class AddEventFragment : Fragment() {
             val eventOrganizer = "Test organizer"
             val eventName = "TestEvent"
             val eventDescription = "TestDescription"
-            val eventLocation = "TestLocation"
+            val eventLocation = address
             val eventCategory = category
             //Adding Key
             val keyValue = Constant.databaseReference.child("events").push()
@@ -175,7 +249,10 @@ class AddEventFragment : Fragment() {
                 endDate,
                 time,
                 eventLocation,
+                latitude,
+                longitude,
                 eventOrganizer,
+                false,
                 eventCategory
             )
 
@@ -194,6 +271,9 @@ class AddEventFragment : Fragment() {
                 keyValue.setValue(eventData).addOnSuccessListener {
                     Toast.makeText(requireActivity(), "Successfully added!", Toast.LENGTH_LONG)
                         .show()
+                    fragmentAddEventBinding.etEventName.text?.clear()
+                    fragmentAddEventBinding.etEventDescription.text?.clear()
+                    fragmentAddEventBinding.etEventOrganizer.text?.clear()
                 }
 
             } else {
@@ -222,16 +302,62 @@ class AddEventFragment : Fragment() {
 
     }
 
+    private fun getAddress(latLng: LatLng): String {
+        addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+
+        val address = addresses?.get(0)?.getAddressLine(0)
+        return address!!
+    }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_info_icon,menu)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId){
+            R.id.infoDialog -> {
+                val dialog = Dialog(requireActivity())
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog.setCancelable(true)
+                dialog.setContentView(R.layout.layout_info_dialog)
+
+                val body = dialog.findViewById(R.id.tvInfo) as TextView
+                val closeButton = dialog.findViewById(R.id.iv_close_map) as ImageView
+
+                body.text = "Add event information. Please provide the details of the event, including the event name, date, time, location, and any other relevant information you would like to include in description. For the location, once you will click on Event location, Map dialog will pop up, where you can select any location by long press and you will see address details, click on Add button once you identify the location. Once you have added the details, Select the appropriate poster for your event and click the button Add Event!"
+
+                closeButton.setOnClickListener {
+                    dialog.dismiss()
+                }
+
+
+               /* val yesBtn = dialog.findViewById(R.id.yesBtn) as Button
+                yesBtn.setOnClickListener {
+                    dialog.dismiss()
+                }
+
+                val noBtn = dialog.findViewById(R.id.noBtn) as Button
+                noBtn.setOnClickListener {
+                    dialog.dismiss()
+                }*/
+
+                dialog.show()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private val getPhotosFromGallery =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { eventUri: Uri? ->
 
-            picturesListUrl = eventUri
+            /*picturesListUrl = eventUri
             //Compress picture
             compressPicture(picturesListUrl)
-            eventUri?.let { displayPictures() }
+            eventUri?.let { displayPictures() }*/
+            picturesListUrl = eventUri
+            eventUri?.let { displayPictures(it) }
         }
 
-    private fun fileFromContentUri(context: Context, contentUri: Uri): File {
+   /* private fun fileFromContentUri(context: Context, contentUri: Uri): File {
         // Preparing Temp file name
         val fileExtension = getFileExtension(context, contentUri)
         val fileName = "temp_file" + if (fileExtension != null) ".$fileExtension" else ""
@@ -261,7 +387,6 @@ class AddEventFragment : Fragment() {
         return MimeTypeMap.getSingleton().getExtensionFromMimeType(fileType)
     }
 
-    @Throws(IOException::class)
     private fun copy(source: InputStream, target: OutputStream) {
         val buf = ByteArray(8192)
         var length: Int
@@ -289,8 +414,10 @@ class AddEventFragment : Fragment() {
 
         }
     }
+    */
 
-    private fun displayPictures() {
+    private fun displayPictures(pictureUri: Uri) {
+        fragmentAddEventBinding.eventPicturePoster.setImageURI(pictureUri)
         fragmentAddEventBinding.txtWantToChange.visibility = View.VISIBLE
     }
 }

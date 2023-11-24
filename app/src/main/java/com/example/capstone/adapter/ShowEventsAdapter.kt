@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +33,9 @@ class ShowEventsAdapter(private val eventList: List<Events>, val shareBtnClickLi
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val eventViewModel = eventList[position]
+
+
+        holder.progressBar.visibility = View.VISIBLE
 
         Picasso.get().load(eventViewModel.pictures).into(holder.eventPicture)
 
@@ -74,6 +78,7 @@ class ShowEventsAdapter(private val eventList: List<Events>, val shareBtnClickLi
         val eventDescription: TextView = this.itemView.findViewById(R.id.eventDescription)
         val eventDate: TextView = this.itemView.findViewById(R.id.eventDate)
         val shareBtn : ImageView = this.itemView.findViewById(R.id.ivShareBtn)
+        val progressBar : ProgressBar = this.itemView.findViewById(R.id.progressBar)
     }
 
     open interface ShareBtnClickListener {

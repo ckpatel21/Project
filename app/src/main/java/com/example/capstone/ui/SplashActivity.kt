@@ -18,7 +18,7 @@ class SplashActivity : AppCompatActivity() {
         val preferences: SharedPreferences =
             this.getSharedPreferences(LOGIN_CREDENTIAL, Context.MODE_PRIVATE)
 
-        val timer = object : CountDownTimer(4000, 1000) {
+        val timer = object : CountDownTimer(3000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
 
             }

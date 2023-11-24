@@ -81,7 +81,7 @@ class MapsFragment : Fragment() {
                 response.exception = task.exception
             }
             mutableLiveData.value = response
-            val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+            val mapFragment = childFragmentManager.findFragmentById(R.id.explorePlaces) as SupportMapFragment?
             mapFragment?.getMapAsync(callback)
 
         }
