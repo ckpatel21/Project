@@ -2,15 +2,10 @@ package com.example.capstone.ui
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
-import android.graphics.Bitmap
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -18,7 +13,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.webkit.MimeTypeMap
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
@@ -26,11 +20,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.setFragmentResultListener
-import androidx.lifecycle.lifecycleScope
 import com.example.capstone.R
 import com.example.capstone.databinding.FragmentAddEventBinding
 import com.example.capstone.model.EventCategory
@@ -46,19 +36,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import id.zelory.compressor.Compressor
-import id.zelory.compressor.constraint.format
-import id.zelory.compressor.constraint.quality
-import id.zelory.compressor.constraint.resolution
-import id.zelory.compressor.constraint.size
-import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
 import java.text.SimpleDateFormat
-import java.util.ArrayList
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
@@ -328,18 +306,6 @@ class AddEventFragment : Fragment() {
                 closeButton.setOnClickListener {
                     dialog.dismiss()
                 }
-
-
-               /* val yesBtn = dialog.findViewById(R.id.yesBtn) as Button
-                yesBtn.setOnClickListener {
-                    dialog.dismiss()
-                }
-
-                val noBtn = dialog.findViewById(R.id.noBtn) as Button
-                noBtn.setOnClickListener {
-                    dialog.dismiss()
-                }*/
-
                 dialog.show()
             }
         }
@@ -353,6 +319,14 @@ class AddEventFragment : Fragment() {
             //Compress picture
             compressPicture(picturesListUrl)
             eventUri?.let { displayPictures() }*/
+
+            /*val bitmap =
+                eventUri?.let {
+                    ImageUtils.decodeSampledBitmapFromUri(requireActivity(),
+                        it,300,300)
+                }
+            val uri = bitmap?.let { BitmapUtils.bitmapToUri(requireActivity(), it) }
+            */
             picturesListUrl = eventUri
             eventUri?.let { displayPictures(it) }
         }

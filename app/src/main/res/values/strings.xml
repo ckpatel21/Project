@@ -46,5 +46,11 @@
     <string name="txt_title_about">Welcome to The Explorer!</string>
     <string name="txt_body_about">We are a passionate team of four developers dedicated to creating an immersive and dynamic platform that allows you to explore the world around you. Our journey began with a shared vision: to empower users to discover new places and events with ease.</string>
     <string name="txt_mission_about">Our Mission: At Explorer, we believe in the power of exploration. We want to inspire you to step outside your comfort zone and discover the incredible diversity of places and events that surround you. Our application is designed to be your trusted companion on this journey, providing a seamless and enriching experience.</string>
+    <string name="txt_about_the_place">About the Place</string>
+    <string name="txt_reviews_ratings">Reviews and Ratings</string>
+    <string name="add_your_reviews">Add your reviews</string>
+    <string name="defaultRating">4.1</string>
+    <string name="txt_added_by">Added By -</string>
+    <string name="txt_add_rating">Add Ratings</string>
 
 </resources>

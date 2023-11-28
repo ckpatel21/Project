@@ -80,7 +80,7 @@
                                 android:padding="@dimen/_10dp"
                                 android:drawablePadding="@dimen/_5dp"
                                 android:drawableLeft="@drawable/icon_reward"
-                                android:background="@drawable/textview_roundered_corners"
+                                android:background="@drawable/textview_rounded_corners"
                                 android:textSize="@dimen/_16sp"
                                 android:text="10" />
 

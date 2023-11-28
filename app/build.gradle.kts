@@ -46,7 +46,8 @@ android {
 
 dependencies {
 
-    implementation("androidx.test:core-ktx:1.5.0")
+    implementation("androidx.test.ext:junit-ktx:1.1.5")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     debugImplementation("androidx.fragment:fragment-testing:1.6.2")
 
     // Kotlin
@@ -62,13 +63,21 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.6.1")
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
-    testImplementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.0")
-    testImplementation("junit:junit:4.13.2")
-    implementation("androidx.test.ext:junit:1.1.5")
-    implementation("androidx.test.espresso:espresso-core:3.5.1")
-    implementation("androidx.test:core:1.5.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.0")
+    implementation("junit:junit:4.13.2")
+    /*implementation("androidx.test:runner:1.4.0")
+    //implementation("androidx.test.ext:junit:1.1.3")
+    //implementation("androidx.test.espresso:espresso-core:3.4.0")
+    //implementation("androidx.test:core:1.4.0")
+    implementation("androidx.test:runner:1.4.0")
+    implementation("androidx.test.espresso:espresso-core:3.4.0")
     implementation("androidx.test:rules:1.5.0")
     implementation("androidx.test:runner:1.5.2")
+*/
+    implementation("org.mockito:mockito-core:1.10.19")
+    implementation("androidx.test.espresso:espresso-core:3.4.0")
+    implementation("androidx.test:runner:1.4.0")
+    implementation("androidx.test:rules:1.4.0")
 
     //Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.2.3"))
