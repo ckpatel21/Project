@@ -52,5 +52,15 @@
     <string name="defaultRating">4.1</string>
     <string name="txt_added_by">Added By -</string>
     <string name="txt_add_rating">Add Ratings</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="txt_or">OR</string>
+    <string name="txt_already_a_user">Already a User?</string>
+    <string name="txt_sign_up_here">SignUp Here</string>
+    <string name="txt_new_user">New User?</string>
+    <string name="txt_login_here">Login Here</string>
+    <string name="signup">Signup</string>
+    <string name="confirmPassword">Confirm Password</string>
 
 </resources>

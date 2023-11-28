@@ -11,10 +11,19 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/title_the_explorer"
+            android:textSize="36sp" />
 
         <ImageView
             android:id="@+id/imageView2"
@@ -23,13 +32,6 @@
             android:layout_margin="@dimen/_20dp"
             app:srcCompat="@drawable/icon_explorer" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/title_the_explorer"
-            android:layout_gravity="center"
-            android:textSize="36sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

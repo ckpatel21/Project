@@ -11,7 +11,9 @@ import androidx.fragment.app.Fragment
 import com.example.capstone.R
 import com.example.capstone.databinding.FragmentProfileBinding
 import com.example.capstone.utils.Constant.Companion.LOGIN_CREDENTIAL
-import com.google.android.gms.auth.api.signin.*
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -40,12 +42,14 @@ class ProfileFragment : Fragment() {
             .build()
         mGoogleSignInClient= GoogleSignIn.getClient(requireActivity(),gso)
 
-        val sharedPreference =
-            requireActivity().getSharedPreferences(LOGIN_CREDENTIAL, Context.MODE_PRIVATE)
+        val sharedPreference = requireActivity().getSharedPreferences(LOGIN_CREDENTIAL, Context.MODE_PRIVATE)
         val emailData = sharedPreference.getString("email", "")
         val nameData = sharedPreference.getString("name", "")
         fragmentProfileBinding.tvEmail.text = emailData.toString()
-        fragmentProfileBinding.tvName.text = nameData.toString()
+
+        if (nameData?.isEmpty()!!) {
+            fragmentProfileBinding.tvName.text = nameData.toString()
+        }
 
         fragmentProfileBinding.tvAddFeedback.setOnClickListener {
             beginTransaction(AddFeedbackFragment())
