@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import com.example.capstone.R
+import com.example.capstone.adapter.ImageViewPagerAdapter
 import com.example.capstone.adapter.ShowReviewAdapter
 import com.example.capstone.databinding.FragmentPlaceDetailsBinding
 import com.example.capstone.model.RatingReview
@@ -19,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.squareup.picasso.Picasso
 
 class PlaceDetailsFragment : Fragment() {
 
@@ -115,7 +116,16 @@ class PlaceDetailsFragment : Fragment() {
                     fragmentPlaceDetailsBinding.textViewCategory.text = category
                     fragmentPlaceDetailsBinding.imageViewCategoryIcon.setImageResource(getCategoryIconRes(category))
 
-                    if(pic0 != ""){
+                    val viewPager: ViewPager2 = fragmentPlaceDetailsBinding.imageViewer
+
+// Create a list of image resources (replace with your actual image resources)
+                    val imageList = listOf(pic0, pic1, pic2)
+
+// Create an adapter and set it to the ViewPager2
+                    val imagePagerAdapter = ImageViewPagerAdapter(requireActivity(), imageList)
+                    viewPager.adapter = imagePagerAdapter
+
+                    /*if(pic0 != ""){
                         Picasso.get().load(pic0).into(fragmentPlaceDetailsBinding.placeImage0)
                     }
                     if(pic1 != ""){
@@ -123,7 +133,7 @@ class PlaceDetailsFragment : Fragment() {
                     }
                     if(pic2 != ""){
                         Picasso.get().load(pic2).into(fragmentPlaceDetailsBinding.placeImage2)
-                    }
+                    }*/
                 }
             } else {
                 // Handle error

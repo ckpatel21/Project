@@ -119,6 +119,11 @@
     </LinearLayout>
         </androidx.cardview.widget.CardView>
 
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/imageViewer"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
         <!-- Images -->
         <!-- Images -->
         <LinearLayout
