@@ -3,7 +3,7 @@
 
     <stroke
         />
-    <solid android:color="@color/light_purple"
+    <solid android:color="#427D9D"
         />
 
     <padding

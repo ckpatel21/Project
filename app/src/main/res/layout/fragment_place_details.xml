@@ -14,7 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:gravity="center"
-                android:textSize="18sp"
+                android:textSize="28sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -46,18 +46,20 @@
                 android:layout_height="wrap_content"
                 android:background="@color/light_yellow"
                 app:cardCornerRadius="@dimen/_5dp"
+                android:backgroundTint="#DDF2FD"
                 app:cardUseCompatPadding="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:padding="12dp"
+
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/textView3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/_5dp"
                         android:fontFamily="@font/fonts"
                         android:padding="@dimen/_5dp"
                         android:text="@string/txt_about_the_place"
@@ -68,8 +70,7 @@
                         android:id="@+id/placeDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_20dp"
-                        android:padding="@dimen/_10dp" />
+                        android:padding="@dimen/_5dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -77,14 +78,6 @@
         <!-- Title -->
 
 
-        <!-- Category -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/light_yellow"
-            android:padding="@dimen/_5dp"
-            app:cardCornerRadius="@dimen/_5dp"
-            app:cardUseCompatPadding="true">
 
         <LinearLayout
         android:id="@+id/categoryLayout"
@@ -117,38 +110,11 @@
             android:layout_marginStart="8dp"
             android:src="@drawable/bottom_navigation_icon_event" />
     </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/imageViewer"
             android:layout_width="match_parent"
             android:layout_height="300dp" />
-
-        <!-- Images -->
-        <!-- Images -->
-        <LinearLayout
-            android:id="@+id/imagesLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp">
-            <!-- Images will be dynamically added here -->
-            <ImageView
-                android:id="@+id/placeImage0"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-            <ImageView
-                android:id="@+id/placeImage1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-            <ImageView
-                android:id="@+id/placeImage2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-        </LinearLayout>
 
         <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -159,38 +125,24 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_20dp"
+                    android:layout_height="300dp"
                     android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+
 
                     <TextView
                         android:id="@+id/textView5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/_5dp"
                         android:fontFamily="@font/fonts"
                         android:padding="@dimen/_5dp"
                         android:text="@string/txt_reviews_ratings"
                         android:textFontWeight="700"
                         android:textSize="@dimen/_24sp" />
 
-                </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="@dimen/_5dp"
-                        android:orientation="vertical">
-
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rcvReview"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" />
-                    </LinearLayout>
-
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         <androidx.cardview.widget.CardView
@@ -203,7 +155,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_20dp"
                 android:orientation="vertical">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -214,7 +165,6 @@
                         android:id="@+id/textView4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/_5dp"
                         android:fontFamily="@font/fonts"
                         android:padding="@dimen/_5dp"
                         android:text="@string/txt_add_rating"
@@ -241,7 +191,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:padding="10dp"
                     android:orientation="vertical">
 
                     <EditText
@@ -249,15 +199,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
+                        android:textColor="@color/black"
                         android:hint="@string/add_your_reviews"
                         android:inputType="text"
                         android:textColorHint="#757575" />
-                </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
 
                     <Button
                         android:id="@+id/btnSubmit"
@@ -266,6 +212,7 @@
                         android:layout_gravity="center"
                         android:text="@string/submit" />
                 </LinearLayout>
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

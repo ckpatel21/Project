@@ -67,6 +67,7 @@ class AddPlaceFragment : Fragment() {
         return fragmentAddPlaceBinding!!.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -90,7 +91,7 @@ class AddPlaceFragment : Fragment() {
         val categoryAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
-            arrayOf("Park", "Trail", "Historical", "Innovative")
+            arrayOf("Fun & Games", "Hiking trails & Parks", "Point of interest & Landmark", "Food & Drinks", "Shopping malls & Antique shops")
         )
         fragmentAddPlaceBinding!!.categoryDropdown.setAdapter(categoryAdapter)
         fragmentAddPlaceBinding!!.categoryDropdown.onItemClickListener =
@@ -103,11 +104,6 @@ class AddPlaceFragment : Fragment() {
         //Select picture
         fragmentAddPlaceBinding!!.imageBtnUploadPhoto.setOnClickListener {
             getPhotosFromGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
-        }
-
-        //Take picture
-        fragmentAddPlaceBinding!!.imageBtnTakePhoto.setOnClickListener {
-
         }
 
 
@@ -138,6 +134,8 @@ class AddPlaceFragment : Fragment() {
                 //Clear Data
                 fragmentAddPlaceBinding!!.etPlaceName.text?.clear()
                 fragmentAddPlaceBinding!!.etPlaceDescription.text?.clear()
+                picturesListUrl.clear()
+                fragmentAddPlaceBinding!!.gridPictures.adapter?.notifyDataSetChanged()
             }
 
 
@@ -177,12 +175,8 @@ class AddPlaceFragment : Fragment() {
         }
 
     private fun displayPictures(pictureUri: List<Uri>) {
-
-
-        val adapter = PlacePictureAdapter(courseList = pictureUri, requireActivity())
-        fragmentAddPlaceBinding!!.gridPictures.adapter = adapter
-
-
+        val placePictureAdapter = context?.let { PlacePictureAdapter(pictureUri, it) }
+        fragmentAddPlaceBinding?.gridPictures?.adapter = placePictureAdapter
     }
 
     //Fetch Values from Firebase

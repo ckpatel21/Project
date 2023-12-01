@@ -75,6 +75,7 @@ class PlaceDetailsFragment : Fragment() {
 
         query.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
+                ratingReviewList.clear()
                 if(snapshot.exists()){
                     for(data in snapshot.children) {
                         val reviewData = data.getValue(RatingReview::class.java)
@@ -119,7 +120,17 @@ class PlaceDetailsFragment : Fragment() {
                     val viewPager: ViewPager2 = fragmentPlaceDetailsBinding.imageViewer
 
 // Create a list of image resources (replace with your actual image resources)
-                    val imageList = listOf(pic0, pic1, pic2)
+                    val imageList = ArrayList<String>()
+                    if(pic0 !=""){
+                        imageList.add(pic0)
+                    }
+                    if(pic1 !=""){
+                        imageList.add(pic1)
+                    }
+                    if(pic2 != ""){
+                        imageList.add(pic2)
+                    }
+
 
 // Create an adapter and set it to the ViewPager2
                     val imagePagerAdapter = ImageViewPagerAdapter(requireActivity(), imageList)

@@ -26,6 +26,7 @@ import com.example.capstone.databinding.FragmentAddEventBinding
 import com.example.capstone.model.EventCategory
 import com.example.capstone.model.Events
 import com.example.capstone.utils.Constant
+import com.example.capstone.utils.Helper
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -60,7 +61,7 @@ class AddEventFragment : Fragment() {
     private var longitude : Double = 0.0
 
     //  val latLng = LatLng(lat!!.toDouble(),lng!!.toDouble())
-    private lateinit var address : String
+    private var address : String = ""
 
     val REQUEST_CODE = 1
 
@@ -207,15 +208,17 @@ class AddEventFragment : Fragment() {
 
 
         fragmentAddEventBinding.btnAddEvent.setOnClickListener {
-            //val eventName = fragmentAddEventBinding!!.etEventName.text.toString()
-            //val eventDescription = fragmentAddEventBinding!!.etEventDescription.text.toString()
-            //val eventLocation = fragmentAddEventBinding!!.etEventLocation.text.toString()
-            //val eventOrganizer = fragmentAddEventBinding!!.etEventOrganizer.text.toString()
 
-            val eventOrganizer = "Test organizer"
-            val eventName = "TestEvent"
-            val eventDescription = "TestDescription"
-            val eventLocation = address
+            val eventName = fragmentAddEventBinding.etEventName.text.toString()
+            val eventDescription = fragmentAddEventBinding.etEventDescription.text.toString()
+            //val eventLocation = fragmentAddEventBinding!!.etEventLocation.text.toString()
+            val eventOrganizer = fragmentAddEventBinding.etEventOrganizer.text.toString()
+
+            //val eventOrganizer = "Test organizer"
+            //val eventName = "TestEvent"
+            //val eventDescription = "TestDescription"
+            var eventLocation = ""
+            eventLocation = address
             val eventCategory = category
             //Adding Key
             val keyValue = Constant.databaseReference.child("events").push()
@@ -234,48 +237,38 @@ class AddEventFragment : Fragment() {
                 eventCategory
             )
 
-            //Adding pictures
-            val ref = storageReference?.child("event")?.child(keyValue.key.toString())
-            if (picturesListUrl?.equals("") == false) {
-                picturesListUrl?.let { it1 ->
-                    ref?.putFile(it1)?.addOnSuccessListener {
-                        ref.downloadUrl.addOnSuccessListener {
-                            keyValue.child("pictures").setValue(it.toString())
+            if(!Helper.nullCheck(eventName) || !Helper.nullCheck(eventDescription) || !Helper.nullCheck(eventOrganizer) ||
+                !Helper.nullCheck(eventLocation) || !Helper.nullCheck(startDate)) {
+                Toast.makeText(requireActivity(),"Please enter valid credentials!",Toast.LENGTH_LONG).show()
+            }else{
+                //Adding pictures
+                val ref = storageReference?.child("event")?.child(keyValue.key.toString())
+                if (picturesListUrl?.equals("") == false) {
+                    picturesListUrl?.let { it1 ->
+                        ref?.putFile(it1)?.addOnSuccessListener {
+                            ref.downloadUrl.addOnSuccessListener {
+                                keyValue.child("pictures").setValue(it.toString())
+                            }
                         }
                     }
-                }
 
-                //Adding values in Firebase
-                keyValue.setValue(eventData).addOnSuccessListener {
-                    Toast.makeText(requireActivity(), "Successfully added!", Toast.LENGTH_LONG)
-                        .show()
-                    fragmentAddEventBinding.etEventName.text?.clear()
-                    fragmentAddEventBinding.etEventDescription.text?.clear()
-                    fragmentAddEventBinding.etEventOrganizer.text?.clear()
-                }
+                    //Adding values in Firebase
+                    keyValue.setValue(eventData).addOnSuccessListener {
+                        Toast.makeText(requireActivity(), "Successfully added!", Toast.LENGTH_LONG)
+                            .show()
+                        fragmentAddEventBinding.etEventName.text?.clear()
+                        fragmentAddEventBinding.etEventDescription.text?.clear()
+                        fragmentAddEventBinding.etEventOrganizer.text?.clear()
+                    }
 
-            } else {
-                Toast.makeText(
-                    requireActivity(),
-                    "Please select poster for the event!",
-                    Toast.LENGTH_LONG
-                ).show()
+                } else {
+                    Toast.makeText(
+                        requireActivity(),
+                        "Please select poster for the event!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
-
-
-            //keyValue.child("pictures").setValue(picturesListUrl.toString())
-
-
-            /*
-                        key.child("addedBy").setValue("Email")
-                        key.child("eventName").setValue(eventName)
-                        key.child("eventDescription").setValue(eventDescription)
-                        key.child("eventStartDate").setValue(startDate)
-                        key.child("eventEndDate").setValue(endDate)
-                        key.child("eventTime").setValue(time)
-                        key.child("eventLocation").setValue(eventLocation)
-                        key.child("eventStatus").setValue(false)
-            */
         }
 
     }

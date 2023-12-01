@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- res/layout/custom_info_window_layout.xml -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="34dp"
-    android:layout_height="54dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dp"
+    android:layout_height="140dp">
 
 
     <!-- Icon Image -->
     <ImageView
         android:id="@+id/imageViewIcon"
-        android:layout_width="34dp"
-        android:layout_height="54dp"/>
+        android:layout_width="100dp"
+        android:layout_height="140dp"
+        android:scaleType="centerCrop" />
 
     <!-- Existing code... -->
 
@@ -18,6 +18,6 @@
         android:id="@+id/textViewForTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>

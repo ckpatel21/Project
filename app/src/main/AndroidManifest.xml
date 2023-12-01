@@ -28,11 +28,10 @@
         <activity
             android:name=".ui.SignUpActivity"
             android:exported="true"
-            android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+            />
         <activity
             android:name=".ui.SplashActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Material3.DayNight.NoActionBar">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -55,11 +54,14 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
         <activity
             android:name=".ui.LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+            />
         <activity
             android:name=".ui.HomeActivity"
             android:exported="true" />

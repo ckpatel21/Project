@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
     tools:context=".ui.HomeActivity">
 
     <FrameLayout
@@ -19,12 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_70dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/_20dp"
-        android:scrollIndicators="left"
         app:labelVisibilityMode="labeled"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        style="@style/Widget.App.BottomNavigationView"
+        app:itemActiveIndicatorStyle="@style/App.Custom.Indicator"
         app:menu="@menu/bottom_nav_menu" />
 </RelativeLayout>

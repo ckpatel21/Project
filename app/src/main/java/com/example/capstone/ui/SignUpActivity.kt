@@ -21,6 +21,8 @@ class SignUpActivity : AppCompatActivity() {
 
         activitySignUpBinding = ActivitySignUpBinding.inflate(layoutInflater)
 
+        supportActionBar?.hide()
+
         auth = Firebase.auth
 
         activitySignUpBinding.btnSignup.setOnClickListener {
@@ -31,6 +33,7 @@ class SignUpActivity : AppCompatActivity() {
 
             if(!Helper.nullCheck(email)){
                 activitySignUpBinding.etUserEmail.error = "Please Enter Credentials!"
+
             }else if (!Helper.nullCheck(password)){
                 activitySignUpBinding.etPassword.error = "Please Enter Credentials!"
             }else if (!Helper.nullCheck(confirmPassword)){

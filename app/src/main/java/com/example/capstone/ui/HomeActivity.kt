@@ -3,9 +3,12 @@ package com.example.capstone.ui
 import android.Manifest
 import android.content.DialogInterface
 import android.content.pm.PackageManager
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -26,6 +29,26 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        val actionBar = supportActionBar
+        if (actionBar != null) {
+
+            val desiredTitleColor = 0xFF164863.toInt() // Replace with your desired background color
+            val desiredBackgroundColor = 0xFFFFFFFF.toInt() // White color
+
+            val colorDrawable = ColorDrawable(desiredBackgroundColor)
+            actionBar.setBackgroundDrawable(colorDrawable)
+
+            val customView = layoutInflater.inflate(R.layout.action_bar, null) // Replace with your custom layout for ActionBar
+            val titleTextView = customView.findViewById<TextView>(R.id.titleTextView) // Replace with your TextView ID in the custom layout
+            titleTextView.text = "The Explorer" // Replace with your title text
+            titleTextView.setTextColor(desiredTitleColor) // Set the desired text color
+
+            actionBar.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+            actionBar.setCustomView(customView)
+
+        }
+
 
         //Fetch Data
         val intent = intent

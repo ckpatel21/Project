@@ -1,121 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/holo_purple"
-    tools:context=".ui.LoginActivity">
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="top|center"
+        android:src="@drawable/icon_explorer_bg"/>
 
-
-    <LinearLayout
-        android:id="@+id/linearLayout9"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+    <TextView
+        android:layout_width="match_parent"
         android:gravity="center"
-        android:orientation="vertical"
-        android:padding="@dimen/_10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="Create New Account"
+        android:textSize="32sp"/>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/_10dp"
+        app:cardCornerRadius="12dp"
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/_10dp">
 
-
-        </LinearLayout>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/light_yellow"
-            app:cardCornerRadius="@dimen/_5dp"
-            app:cardUseCompatPadding="true">
-
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/_10dp">
-
+                android:layout_marginTop="@dimen/_10dp"
+                android:hint="@string/email">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etUserEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/edittext_background"
                     android:ems="10"
-                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
                     android:minHeight="@dimen/_48dp"
                     android:padding="@dimen/_10dp"
                     android:textColorHint="#757575"
                     android:textSize="@dimen/_16sp" />
 
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:hint="@string/password">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10dp"
-                    android:background="@drawable/edittext_background"
                     android:ems="10"
-                    android:hint="@string/password"
+                    android:inputType="textPassword"
                     android:minHeight="@dimen/_48dp"
                     android:padding="@dimen/_10dp"
                     android:textColorHint="#757575"
                     android:textSize="@dimen/_16sp" />
 
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:hint="@string/confirmPassword">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etConfirmPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10dp"
-                    android:background="@drawable/edittext_background"
                     android:ems="10"
-                    android:hint="@string/confirmPassword"
+                    android:inputType="textPassword"
                     android:minHeight="@dimen/_48dp"
                     android:padding="@dimen/_10dp"
                     android:textColorHint="#757575"
                     android:textSize="@dimen/_16sp" />
 
-                <Button
-                    android:id="@+id/btnSignup"
-                    android:layout_width="wrap_content"
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btnSignup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_10dp"
+                android:text="@string/signup" />
+
+            <LinearLayout
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView15"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/_10dp"
-                    android:text="@string/signup" />
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:text="@string/txt_already_a_user" />
 
-
+                <TextView
+                    android:fontFamily="@font/fonts"
+                    android:id="@+id/btnLoginHere"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_10dp"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:text="@string/txt_login_here"
+                    android:textFontWeight="900"
+                    android:textSize="@dimen/_24sp" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView15"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/txt_already_a_user" />
-
-            <TextView
-                android:id="@+id/btnLoginHere"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_10dp"
-                android:layout_weight="1"
-                android:textSize="@dimen/_24sp"
-                android:fontFamily="@font/fonts"
-                android:textFontWeight="900"
-                android:text="@string/txt_login_here" />
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
+
