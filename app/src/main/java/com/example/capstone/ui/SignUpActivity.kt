@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.capstone.R
 import com.example.capstone.databinding.ActivitySignUpBinding
 import com.example.capstone.utils.EmailValidator
 import com.example.capstone.utils.Helper
@@ -32,16 +33,20 @@ class SignUpActivity : AppCompatActivity() {
             val confirmPassword = activitySignUpBinding.etConfirmPassword.text.toString()
 
             if(!Helper.nullCheck(email)){
-                activitySignUpBinding.etUserEmail.error = "Please Enter Credentials!"
-
+                activitySignUpBinding.etUserEmail.error = getString(R.string.error_null_error)
+                activitySignUpBinding.etUserEmail.requestFocus()
             }else if (!Helper.nullCheck(password)){
-                activitySignUpBinding.etPassword.error = "Please Enter Credentials!"
+                activitySignUpBinding.etPassword.error = getString(R.string.error_null_error)
+                activitySignUpBinding.etPassword.requestFocus()
             }else if (!Helper.nullCheck(confirmPassword)){
-                activitySignUpBinding.etConfirmPassword.error = "Please Enter Credentials!"
+                activitySignUpBinding.etConfirmPassword.error = getString(R.string.error_null_error)
+                activitySignUpBinding.etConfirmPassword.requestFocus()
             }else if(password != confirmPassword){
-                activitySignUpBinding.etConfirmPassword.error = "Confirm password doesn't Match!"
+                activitySignUpBinding.etConfirmPassword.error = getString(R.string.error_confirm_password)
+                activitySignUpBinding.etConfirmPassword.requestFocus()
             }else if(!EmailValidator.isValidEmail(email)){
-                activitySignUpBinding.etUserEmail.error = "Please Enter Valid Email!"
+                activitySignUpBinding.etUserEmail.error = getString(R.string.error_valid_email)
+                activitySignUpBinding.etUserEmail.requestFocus()
             } else{
                 //Not Empty
                 auth.createUserWithEmailAndPassword(email, password)

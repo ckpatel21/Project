@@ -62,5 +62,8 @@
     <string name="txt_login_here">Login Here</string>
     <string name="signup">Signup</string>
     <string name="confirmPassword">Confirm Password</string>
+    <string name="error_null_error">Please Enter Credentials!</string>
+    <string name="error_valid_email">Please Enter Valid Email!</string>
+    <string name="error_confirm_password">Confirm password doesn\'t Match!</string>
 
 </resources>

@@ -54,11 +54,14 @@ class LoginActivity : AppCompatActivity() {
             val password = activityLoginBinding.etPassword.text.toString()
 
             if(!Helper.nullCheck(email)){
-                activityLoginBinding.etUserEmail.error = "Please Enter Credentials!"
+                activityLoginBinding.etUserEmail.error = getString(R.string.error_null_error)
+                activityLoginBinding.etUserEmail.requestFocus()
             }else if (!Helper.nullCheck(password)){
-                activityLoginBinding.etPassword.error = "Please Enter Credentials!"
+                activityLoginBinding.etPassword.error = getString(R.string.error_null_error)
+                activityLoginBinding.etPassword.requestFocus()
             }else if(!EmailValidator.isValidEmail(email)){
-                activityLoginBinding.etUserEmail.error = "Please Enter Valid Email!"
+                activityLoginBinding.etUserEmail.error = getString(R.string.error_valid_email)
+                activityLoginBinding.etUserEmail.requestFocus()
             } else{
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) { task ->

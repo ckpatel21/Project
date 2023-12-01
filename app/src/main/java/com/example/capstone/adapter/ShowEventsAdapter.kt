@@ -57,7 +57,7 @@ class ShowEventsAdapter(private val eventList: List<Events>, val shareBtnClickLi
 
         holder.shareBtn.setOnClickListener {
             if (shareClickListener != null){
-                shareClickListener?.onShareBtnClick(position, eventView.eventName, eventView.eventStartDate)
+                shareClickListener?.onShareBtnClick(position, eventView.eventName, eventView.eventStartDate, holder.eventPicture, eventView.eventDescription, eventView.eventLatitude, eventView.eventLongitude)
             }
         }
         holder.eventLayout.setOnClickListener {
@@ -90,9 +90,18 @@ class ShowEventsAdapter(private val eventList: List<Events>, val shareBtnClickLi
     }
 
     open interface ShareBtnClickListener {
-        fun onShareBtnClick(position: Int, eventName: String?, eventStartDate: String?)
+        fun onShareBtnClick(
+            position: Int,
+            eventName: String?,
+            eventStartDate: String?,
+            pictures: ImageView,
+            eventDescription: String?,
+            eventLatitude: Double?,
+            eventLongitude: Double?
+        )
     }
     open interface  LayoutBtnClickListener {
         fun onLayoutClick(position: Int, eventList : Events )
     }
+
 }
