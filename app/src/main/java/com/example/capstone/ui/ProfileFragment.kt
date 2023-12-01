@@ -47,7 +47,7 @@ class ProfileFragment : Fragment() {
         val nameData = sharedPreference.getString("name", "")
         fragmentProfileBinding.tvEmail.text = emailData.toString()
 
-        if (nameData?.isEmpty()!!) {
+        if (nameData?.isNotEmpty() == true) {
             fragmentProfileBinding.tvName.text = nameData.toString()
         }
 
