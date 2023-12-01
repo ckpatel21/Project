@@ -1,7 +1,5 @@
 package com.example.capstone.ui
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -18,8 +16,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.squareup.picasso.Picasso
-import java.lang.String
-import java.util.Locale
 
 
 //Todo - Events details after clicking on specific event
@@ -70,7 +66,7 @@ class EventDetailsFragment : Fragment() {
         mMap.addMarker(
             MarkerOptions()
                 .position(eventLocation)
-                .title("Event Location")
+                .title(fragmentEventDetailsBinding.eventTitle.text.toString())
         )
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latitude, longitude),15f))
 
