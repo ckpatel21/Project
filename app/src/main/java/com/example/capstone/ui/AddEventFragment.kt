@@ -122,7 +122,7 @@ class AddEventFragment : Fragment() {
             val est: Calendar = Calendar.getInstance(TimeZone.getTimeZone("EST"))
             est.timeInMillis = it
             est.add(Calendar.DAY_OF_MONTH, 1)
-            val format = SimpleDateFormat("dd-MM-yyyy")
+            val format = SimpleDateFormat("MM/dd/yyyy")
             startDate = format.format(est.time)
             fragmentAddEventBinding.tvStartDate.text = startDate
         }
@@ -130,7 +130,7 @@ class AddEventFragment : Fragment() {
             val est: Calendar = Calendar.getInstance(TimeZone.getTimeZone("EST"))
             est.timeInMillis = it
             est.add(Calendar.DAY_OF_MONTH, 1)
-            val format = SimpleDateFormat("dd-MM-yyyy")
+            val format = SimpleDateFormat("MM/dd/yyyy")
             endDate = format.format(est.time)
             fragmentAddEventBinding.tvEndDate.text = endDate
         }
