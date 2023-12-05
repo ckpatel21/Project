@@ -35,7 +35,7 @@ class AddFeedbackFragment : Fragment() {
 
             val feedbackMessage = fragmentAddFeedbackFragment.etMessage.text.toString()
 
-            if(Helper.nullCheck(feedbackMessage)){
+            if(!Helper.nullCheck(feedbackMessage)){
                 Toast.makeText(requireActivity(), "Please enter a message or Feedback!", Toast.LENGTH_LONG)
                     .show()
             }else{

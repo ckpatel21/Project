@@ -62,6 +62,9 @@ class AddEventFragment : Fragment() {
 
     //  val latLng = LatLng(lat!!.toDouble(),lng!!.toDouble())
     private var address : String = ""
+    var startDate = ""
+    var endDate = ""
+    var time = ""
 
     val REQUEST_CODE = 1
 
@@ -91,9 +94,6 @@ class AddEventFragment : Fragment() {
         storageReference = FirebaseStorage.getInstance().reference
 
 
-        val startDate = ""
-        val endDate = ""
-        var time = ""
 
         val startDatePicker = MaterialDatePicker.Builder.datePicker()
             .setSelection(MaterialDatePicker.todayInUtcMilliseconds()).setTitleText("Start Date")
@@ -123,7 +123,7 @@ class AddEventFragment : Fragment() {
             est.timeInMillis = it
             est.add(Calendar.DAY_OF_MONTH, 1)
             val format = SimpleDateFormat("dd-MM-yyyy")
-            val startDate: String = format.format(est.time)
+            startDate = format.format(est.time)
             fragmentAddEventBinding.tvStartDate.text = startDate
         }
         endDatePicker.addOnPositiveButtonClickListener {
@@ -131,7 +131,7 @@ class AddEventFragment : Fragment() {
             est.timeInMillis = it
             est.add(Calendar.DAY_OF_MONTH, 1)
             val format = SimpleDateFormat("dd-MM-yyyy")
-            val endDate: String = format.format(est.time)
+            endDate = format.format(est.time)
             fragmentAddEventBinding.tvEndDate.text = endDate
         }
 

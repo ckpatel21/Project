@@ -66,6 +66,7 @@ class PlaceDetailsFragment : Fragment() {
                 Toast.makeText(requireActivity(),"Successfully added!", Toast.LENGTH_LONG).show()
                 //Clear Data
                 fragmentPlaceDetailsBinding.etReview.text.clear()
+                fragmentPlaceDetailsBinding.ratingBar.rating = 0.0f
             }
         }
         //End - Add Ratings and Review
