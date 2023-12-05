@@ -1,15 +1,12 @@
 package com.example.capstone.ui
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,9 +18,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
 
 class EventFragment : Fragment() {
@@ -159,7 +153,7 @@ class EventFragment : Fragment() {
         return mutableLiveData
     }
 
-    fun getLocalBitmapUri(imageView: ImageView): Uri? {
+    /*fun getLocalBitmapUri(imageView: ImageView): Uri? {
         // Extract Bitmap from ImageView drawable
         val drawable = imageView.drawable
         var bmp: Bitmap? = null
@@ -188,7 +182,7 @@ class EventFragment : Fragment() {
             e.printStackTrace()
         }
         return bmpUri
-    }
+    }*/
 
 
     private fun loadFragment(fragment: Fragment, eventList: Events) {
