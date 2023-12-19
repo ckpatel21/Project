@@ -15,6 +15,8 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
+        supportActionBar?.hide()
+
         val preferences: SharedPreferences =
             this.getSharedPreferences(LOGIN_CREDENTIAL, Context.MODE_PRIVATE)
 

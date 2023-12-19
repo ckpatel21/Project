@@ -2,15 +2,10 @@ package com.example.capstone.ui
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
-import android.graphics.Bitmap
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -18,7 +13,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.webkit.MimeTypeMap
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
@@ -26,16 +20,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.setFragmentResultListener
-import androidx.lifecycle.lifecycleScope
 import com.example.capstone.R
 import com.example.capstone.databinding.FragmentAddEventBinding
 import com.example.capstone.model.EventCategory
 import com.example.capstone.model.Events
 import com.example.capstone.utils.Constant
+import com.example.capstone.utils.Helper
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -46,19 +37,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import id.zelory.compressor.Compressor
-import id.zelory.compressor.constraint.format
-import id.zelory.compressor.constraint.quality
-import id.zelory.compressor.constraint.resolution
-import id.zelory.compressor.constraint.size
-import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
 import java.text.SimpleDateFormat
-import java.util.ArrayList
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
@@ -82,7 +61,10 @@ class AddEventFragment : Fragment() {
     private var longitude : Double = 0.0
 
     //  val latLng = LatLng(lat!!.toDouble(),lng!!.toDouble())
-    private lateinit var address : String
+    private var address : String = ""
+    var startDate = ""
+    var endDate = ""
+    var time = ""
 
     val REQUEST_CODE = 1
 
@@ -112,9 +94,6 @@ class AddEventFragment : Fragment() {
         storageReference = FirebaseStorage.getInstance().reference
 
 
-        val startDate = ""
-        val endDate = ""
-        var time = ""
 
         val startDatePicker = MaterialDatePicker.Builder.datePicker()
             .setSelection(MaterialDatePicker.todayInUtcMilliseconds()).setTitleText("Start Date")
@@ -143,16 +122,16 @@ class AddEventFragment : Fragment() {
             val est: Calendar = Calendar.getInstance(TimeZone.getTimeZone("EST"))
             est.timeInMillis = it
             est.add(Calendar.DAY_OF_MONTH, 1)
-            val format = SimpleDateFormat("dd-MM-yyyy")
-            val startDate: String = format.format(est.time)
+            val format = SimpleDateFormat("MM/dd/yyyy")
+            startDate = format.format(est.time)
             fragmentAddEventBinding.tvStartDate.text = startDate
         }
         endDatePicker.addOnPositiveButtonClickListener {
             val est: Calendar = Calendar.getInstance(TimeZone.getTimeZone("EST"))
             est.timeInMillis = it
             est.add(Calendar.DAY_OF_MONTH, 1)
-            val format = SimpleDateFormat("dd-MM-yyyy")
-            val endDate: String = format.format(est.time)
+            val format = SimpleDateFormat("MM/dd/yyyy")
+            endDate = format.format(est.time)
             fragmentAddEventBinding.tvEndDate.text = endDate
         }
 
@@ -229,15 +208,17 @@ class AddEventFragment : Fragment() {
 
 
         fragmentAddEventBinding.btnAddEvent.setOnClickListener {
-            //val eventName = fragmentAddEventBinding!!.etEventName.text.toString()
-            //val eventDescription = fragmentAddEventBinding!!.etEventDescription.text.toString()
-            //val eventLocation = fragmentAddEventBinding!!.etEventLocation.text.toString()
-            //val eventOrganizer = fragmentAddEventBinding!!.etEventOrganizer.text.toString()
 
-            val eventOrganizer = "Test organizer"
-            val eventName = "TestEvent"
-            val eventDescription = "TestDescription"
-            val eventLocation = address
+            val eventName = fragmentAddEventBinding.etEventName.text.toString()
+            val eventDescription = fragmentAddEventBinding.etEventDescription.text.toString()
+            //val eventLocation = fragmentAddEventBinding!!.etEventLocation.text.toString()
+            val eventOrganizer = fragmentAddEventBinding.etEventOrganizer.text.toString()
+
+            //val eventOrganizer = "Test organizer"
+            //val eventName = "TestEvent"
+            //val eventDescription = "TestDescription"
+            var eventLocation = ""
+            eventLocation = address
             val eventCategory = category
             //Adding Key
             val keyValue = Constant.databaseReference.child("events").push()
@@ -256,48 +237,38 @@ class AddEventFragment : Fragment() {
                 eventCategory
             )
 
-            //Adding pictures
-            val ref = storageReference?.child("event")?.child(keyValue.key.toString())
-            if (picturesListUrl?.equals("") == false) {
-                picturesListUrl?.let { it1 ->
-                    ref?.putFile(it1)?.addOnSuccessListener {
-                        ref.downloadUrl.addOnSuccessListener {
-                            keyValue.child("pictures").setValue(it.toString())
+            if(!Helper.nullCheck(eventName) || !Helper.nullCheck(eventDescription) || !Helper.nullCheck(eventOrganizer) ||
+                !Helper.nullCheck(eventLocation) || !Helper.nullCheck(startDate)) {
+                Toast.makeText(requireActivity(),"Please enter valid credentials!",Toast.LENGTH_LONG).show()
+            }else{
+                //Adding pictures
+                val ref = storageReference?.child("event")?.child(keyValue.key.toString())
+                if (picturesListUrl?.equals("") == false) {
+                    picturesListUrl?.let { it1 ->
+                        ref?.putFile(it1)?.addOnSuccessListener {
+                            ref.downloadUrl.addOnSuccessListener {
+                                keyValue.child("pictures").setValue(it.toString())
+                            }
                         }
                     }
-                }
 
-                //Adding values in Firebase
-                keyValue.setValue(eventData).addOnSuccessListener {
-                    Toast.makeText(requireActivity(), "Successfully added!", Toast.LENGTH_LONG)
-                        .show()
-                    fragmentAddEventBinding.etEventName.text?.clear()
-                    fragmentAddEventBinding.etEventDescription.text?.clear()
-                    fragmentAddEventBinding.etEventOrganizer.text?.clear()
-                }
+                    //Adding values in Firebase
+                    keyValue.setValue(eventData).addOnSuccessListener {
+                        Toast.makeText(requireActivity(), "Successfully added!", Toast.LENGTH_LONG)
+                            .show()
+                        fragmentAddEventBinding.etEventName.text?.clear()
+                        fragmentAddEventBinding.etEventDescription.text?.clear()
+                        fragmentAddEventBinding.etEventOrganizer.text?.clear()
+                    }
 
-            } else {
-                Toast.makeText(
-                    requireActivity(),
-                    "Please select poster for the event!",
-                    Toast.LENGTH_LONG
-                ).show()
+                } else {
+                    Toast.makeText(
+                        requireActivity(),
+                        "Please select poster for the event!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
-
-
-            //keyValue.child("pictures").setValue(picturesListUrl.toString())
-
-
-            /*
-                        key.child("addedBy").setValue("Email")
-                        key.child("eventName").setValue(eventName)
-                        key.child("eventDescription").setValue(eventDescription)
-                        key.child("eventStartDate").setValue(startDate)
-                        key.child("eventEndDate").setValue(endDate)
-                        key.child("eventTime").setValue(time)
-                        key.child("eventLocation").setValue(eventLocation)
-                        key.child("eventStatus").setValue(false)
-            */
         }
 
     }
@@ -328,18 +299,6 @@ class AddEventFragment : Fragment() {
                 closeButton.setOnClickListener {
                     dialog.dismiss()
                 }
-
-
-               /* val yesBtn = dialog.findViewById(R.id.yesBtn) as Button
-                yesBtn.setOnClickListener {
-                    dialog.dismiss()
-                }
-
-                val noBtn = dialog.findViewById(R.id.noBtn) as Button
-                noBtn.setOnClickListener {
-                    dialog.dismiss()
-                }*/
-
                 dialog.show()
             }
         }
@@ -353,6 +312,14 @@ class AddEventFragment : Fragment() {
             //Compress picture
             compressPicture(picturesListUrl)
             eventUri?.let { displayPictures() }*/
+
+            /*val bitmap =
+                eventUri?.let {
+                    ImageUtils.decodeSampledBitmapFromUri(requireActivity(),
+                        it,300,300)
+                }
+            val uri = bitmap?.let { BitmapUtils.bitmapToUri(requireActivity(), it) }
+            */
             picturesListUrl = eventUri
             eventUri?.let { displayPictures(it) }
         }

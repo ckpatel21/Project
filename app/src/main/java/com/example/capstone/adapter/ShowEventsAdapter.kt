@@ -1,7 +1,7 @@
 package com.example.capstone.adapter
 
 import android.graphics.drawable.Drawable
-import android.net.Uri
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,29 +32,37 @@ class ShowEventsAdapter(private val eventList: List<Events>, val shareBtnClickLi
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val eventViewModel = eventList[position]
+        val eventView = eventList[position]
 
 
-        holder.progressBar.visibility = View.VISIBLE
+        val timer = object : CountDownTimer(3000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                holder.progressBar.visibility = View.VISIBLE
+            }
+            override fun onFinish() {
+                Picasso.get().load(eventView.pictures).into(holder.eventPicture)
+                holder.progressBar.visibility = View.GONE
+            }
+        }
+        timer.start()
 
-        Picasso.get().load(eventViewModel.pictures).into(holder.eventPicture)
 
         //holder.eventPicture.setIm(loadImageFromWebOperations(eventViewModel.pictures))
-        holder.eventName.text = eventViewModel.eventName
-        holder.eventDescription.text = eventViewModel.eventDescription
-        holder.eventDate.text = eventViewModel.eventStartDate
+        holder.eventName.text = eventView.eventName
+        holder.eventDescription.text = eventView.eventDescription
+        holder.eventDate.text = eventView.eventStartDate
 
         shareClickListener = shareBtnClickListener
         layoutClickListener = layoutBtnClickListener
 
         holder.shareBtn.setOnClickListener {
             if (shareClickListener != null){
-                shareClickListener?.onShareBtnClick(position, eventViewModel.eventName, eventViewModel.eventStartDate)
+                shareClickListener?.onShareBtnClick(position, eventView.eventName, eventView.eventStartDate, holder.eventPicture, eventView.eventDescription, eventView.eventLatitude, eventView.eventLongitude)
             }
         }
         holder.eventLayout.setOnClickListener {
             if (layoutClickListener != null){
-                layoutClickListener?.onLayoutClick(position, eventViewModel)
+                layoutClickListener?.onLayoutClick(position, eventView)
             }
         }
     }
@@ -82,9 +90,18 @@ class ShowEventsAdapter(private val eventList: List<Events>, val shareBtnClickLi
     }
 
     open interface ShareBtnClickListener {
-        fun onShareBtnClick(position: Int, eventName: String?, eventStartDate: String?)
+        fun onShareBtnClick(
+            position: Int,
+            eventName: String?,
+            eventStartDate: String?,
+            pictures: ImageView,
+            eventDescription: String?,
+            eventLatitude: Double?,
+            eventLongitude: Double?
+        )
     }
     open interface  LayoutBtnClickListener {
         fun onLayoutClick(position: Int, eventList : Events )
     }
+
 }

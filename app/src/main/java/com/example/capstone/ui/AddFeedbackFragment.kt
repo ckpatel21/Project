@@ -2,14 +2,15 @@ package com.example.capstone.ui
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.example.capstone.databinding.FragmentAddFeedbackBinding
 import com.example.capstone.model.Feedback
 import com.example.capstone.utils.Constant
+import com.example.capstone.utils.Helper
 
 class AddFeedbackFragment : Fragment() {
 
@@ -34,7 +35,7 @@ class AddFeedbackFragment : Fragment() {
 
             val feedbackMessage = fragmentAddFeedbackFragment.etMessage.text.toString()
 
-            if(fragmentAddFeedbackFragment.etMessage.text.isEmpty()){
+            if(!Helper.nullCheck(feedbackMessage)){
                 Toast.makeText(requireActivity(), "Please enter a message or Feedback!", Toast.LENGTH_LONG)
                     .show()
             }else{

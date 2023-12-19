@@ -46,5 +46,24 @@
     <string name="txt_title_about">Welcome to The Explorer!</string>
     <string name="txt_body_about">We are a passionate team of four developers dedicated to creating an immersive and dynamic platform that allows you to explore the world around you. Our journey began with a shared vision: to empower users to discover new places and events with ease.</string>
     <string name="txt_mission_about">Our Mission: At Explorer, we believe in the power of exploration. We want to inspire you to step outside your comfort zone and discover the incredible diversity of places and events that surround you. Our application is designed to be your trusted companion on this journey, providing a seamless and enriching experience.</string>
+    <string name="txt_about_the_place">About the Place</string>
+    <string name="txt_reviews_ratings">Reviews and Ratings</string>
+    <string name="add_your_reviews">Add your reviews</string>
+    <string name="defaultRating">4.1</string>
+    <string name="txt_added_by">Added By -</string>
+    <string name="txt_add_rating">Add Ratings</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="txt_or">OR</string>
+    <string name="txt_already_a_user">Already a User?</string>
+    <string name="txt_sign_up_here">SignUp Here</string>
+    <string name="txt_new_user">New User?</string>
+    <string name="txt_login_here">Login Here</string>
+    <string name="signup">Signup</string>
+    <string name="confirmPassword">Confirm Password</string>
+    <string name="error_null_error">Please Enter Credentials!</string>
+    <string name="error_valid_email">Please Enter Valid Email!</string>
+    <string name="error_confirm_password">Confirm password doesn\'t Match!</string>
 
 </resources>

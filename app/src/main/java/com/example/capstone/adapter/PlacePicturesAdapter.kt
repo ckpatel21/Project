@@ -5,62 +5,34 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.ImageView
+import androidx.recyclerview.widget.RecyclerView
 import com.example.capstone.R
 
 class PlacePictureAdapter(
-    // on below line we are creating two
-    // variables for course list and context
     private val courseList: List<Uri>,
     private val context: Context
-) :
-    BaseAdapter() {
-    // in base adapter class we are creating variables
-    // for layout inflater, course image view and course text view.
-    private var layoutInflater: LayoutInflater? = null
+) : RecyclerView.Adapter<PlacePictureAdapter.PlacePictureViewHolder>() {
 
-    private lateinit var courseIV: ImageView
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlacePictureViewHolder {
+        val view = LayoutInflater.from(context).inflate(R.layout.layout_picture, parent, false)
+        return PlacePictureViewHolder(view)
+    }
 
-    // below method is use to return the count of course list
-    override fun getCount(): Int {
+    override fun onBindViewHolder(holder: PlacePictureViewHolder, position: Int) {
+        val currentUri = courseList[position]
+        holder.bind(currentUri)
+    }
+
+    override fun getItemCount(): Int {
         return courseList.size
     }
 
-    // below function is use to return the item of grid view.
-    override fun getItem(position: Int): Any? {
-        return null
-    }
+    inner class PlacePictureViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val courseIV: ImageView = itemView.findViewById(R.id.imageView)
 
-    // below function is use to return item id of grid view.
-    override fun getItemId(position: Int): Long {
-        return 0
-    }
-
-    // in below function we are getting individual item of grid view.
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        var convertView = convertView
-        // on blow line we are checking if layout inflater
-        // is null, if it is null we are initializing it.
-        if (layoutInflater == null) {
-            layoutInflater =
-                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        fun bind(uri: Uri) {
+            courseIV.setImageURI(uri)
         }
-        // on the below line we are checking if convert view is null.
-        // If it is null we are initializing it.
-        if (convertView == null) {
-            // on below line we are passing the layout file
-            // which we have to inflate for each item of grid view.
-            convertView = layoutInflater!!.inflate(R.layout.layout_picture, null)
-        }
-        // on below line we are initializing our course image view
-        // and course text view with their ids.
-        courseIV = convertView!!.findViewById(R.id.imageView)
-        // on below line we are setting image for our course image view.
-
-        courseIV.setImageURI(courseList.get(position))
-        // on below line we are setting text in our course text view.
-        // at last we are returning our convert view.
-        return convertView
     }
 }

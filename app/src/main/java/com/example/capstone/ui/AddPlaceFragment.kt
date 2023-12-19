@@ -2,6 +2,7 @@ package com.example.capstone.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.*
 import android.content.pm.PackageManager
 import android.location.Location
@@ -11,8 +12,12 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.*
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -62,9 +67,11 @@ class AddPlaceFragment : Fragment() {
         return fragmentAddPlaceBinding!!.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setHasOptionsMenu(true)
 
         firebaseStore = FirebaseStorage.getInstance()
         storageReference = FirebaseStorage.getInstance().reference
@@ -81,12 +88,12 @@ class AddPlaceFragment : Fragment() {
 
         //TODO
         //Add Category
-        val adapter = ArrayAdapter(
+        val categoryAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
-            arrayOf("Park", "Trail", "Historical", "Innovative")
+            arrayOf("Fun & Games", "Hiking trails & Parks", "Point of interest & Landmark", "Food & Drinks", "Shopping malls & Antique shops")
         )
-        fragmentAddPlaceBinding!!.categoryDropdown.setAdapter(adapter)
+        fragmentAddPlaceBinding!!.categoryDropdown.setAdapter(categoryAdapter)
         fragmentAddPlaceBinding!!.categoryDropdown.onItemClickListener =
             AdapterView.OnItemClickListener { parent, _, position, id ->
                 // do something with the available information
@@ -97,11 +104,6 @@ class AddPlaceFragment : Fragment() {
         //Select picture
         fragmentAddPlaceBinding!!.imageBtnUploadPhoto.setOnClickListener {
             getPhotosFromGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
-        }
-
-        //Take picture
-        fragmentAddPlaceBinding!!.imageBtnTakePhoto.setOnClickListener {
-
         }
 
 
@@ -129,14 +131,33 @@ class AddPlaceFragment : Fragment() {
             //Adding values in Firebase
             key.setValue(placeData).addOnSuccessListener {
                 Toast.makeText(requireActivity(),"Successfully added!",Toast.LENGTH_LONG).show()
+                //Clear Data
+                fragmentAddPlaceBinding!!.etPlaceName.text?.clear()
+                fragmentAddPlaceBinding!!.etPlaceDescription.text?.clear()
+                picturesListUrl.clear()
+                fragmentAddPlaceBinding!!.gridPictures.adapter?.notifyDataSetChanged()
             }
 
 
             //Adding pictures
             val ref = storageReference?.child("places")?.child(keyValue.key.toString())
             for(i in picturesListUrl.indices){
-                ref?.child(i.toString())?.putFile(picturesListUrl[i])
-                key.child("pictures").child(i.toString()).setValue(picturesListUrl[i].toString())
+                //ref?.child(i.toString())?.putFile(picturesListUrl[i])
+                //key.child("pictures").child(i.toString()).setValue(picturesListUrl[i].toString())
+                picturesListUrl.let {
+                    ref?.child("$i")?.putFile(it[i])?.addOnSuccessListener {
+                        ref.child("$i").downloadUrl.addOnSuccessListener {uri->
+                            keyValue.child("pictures_$i").setValue(uri.toString())
+                        }
+                    }
+                }
+                /*picturesListUrl.let { it1 ->
+                    ref?.putFile(it1[i])?.addOnSuccessListener {
+                        ref.downloadUrl.addOnSuccessListener {
+                            keyValue.child("pictures_$i").setValue(it.toString())
+                        }
+                    }
+                }*/
             }
         }
     }
@@ -154,12 +175,8 @@ class AddPlaceFragment : Fragment() {
         }
 
     private fun displayPictures(pictureUri: List<Uri>) {
-
-
-        val adapter = PlacePictureAdapter(courseList = pictureUri, requireActivity())
-        fragmentAddPlaceBinding!!.gridPictures.adapter = adapter
-
-
+        val placePictureAdapter = context?.let { PlacePictureAdapter(pictureUri, it) }
+        fragmentAddPlaceBinding?.gridPictures?.adapter = placePictureAdapter
     }
 
     //Fetch Values from Firebase
@@ -243,5 +260,29 @@ class AddPlaceFragment : Fragment() {
         )
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_info_icon,menu)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId){
+            R.id.infoDialog -> {
+                val dialog = Dialog(requireActivity())
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog.setCancelable(true)
+                dialog.setContentView(R.layout.layout_info_dialog)
 
+                val body = dialog.findViewById(R.id.tvInfo) as TextView
+                val closeButton = dialog.findViewById(R.id.iv_close_map) as ImageView
+
+                body.text = "Add place information. Please provide the details of the place, including the place name, description, and category. For the location, we will be sending user's current location. Once you have added the details, Select the appropriate pictures for your place and click the button Add Event, We can select minimum of 1 picture and maximum of 3 pictures for any specific place!"
+
+                closeButton.setOnClickListener {
+                    dialog.dismiss()
+                }
+                dialog.show()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

@@ -1,0 +1,13 @@
+[
+  {
+    "featureType": "poi",
+    "stylers": [
+      {
+        "visibility": "off"
+      },
+      {
+        "weight": 8
+      }
+    ]
+  }
+]
