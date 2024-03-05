@@ -1,46 +1,48 @@
 package com.example.capstone.ui
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.CountDownTimer
 import androidx.appcompat.app.AppCompatActivity
-import com.example.capstone.R
-import com.example.capstone.utils.Constant.Companion.LOGIN_CREDENTIAL
+import androidx.lifecycle.ViewModelProvider
+import com.example.capstone.databinding.ActivitySplashBinding
+import com.example.capstone.viewModel.SplashActivityViewModel
+import com.example.capstone.viewModel.SplashActivityViewModelFactory
 
 class SplashActivity : AppCompatActivity() {
 
+
+    private lateinit var activitySplashBinding: ActivitySplashBinding
+
+    private lateinit var splashActivityViewModel: SplashActivityViewModel
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
+        //setContentView(R.layout.activity_splash)
 
         supportActionBar?.hide()
+        activitySplashBinding = ActivitySplashBinding.inflate(layoutInflater)
 
-        val preferences: SharedPreferences =
-            this.getSharedPreferences(LOGIN_CREDENTIAL, Context.MODE_PRIVATE)
+        val splashActivityViewModelFactory = SplashActivityViewModelFactory()
+        val splashActivityViewModel = ViewModelProvider(this, splashActivityViewModelFactory).get(SplashActivityViewModel::class.java)
 
-        val timer = object : CountDownTimer(3000, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
+        splashActivityViewModel.timer()
 
-            }
+        splashActivityViewModel.navigateToLoginScreen.observe(this) { loginNavigation ->
+            if (loginNavigation) {
+                //Not registered
+                val intent = Intent(this, LoginActivity::class.java)
+                //intent.putExtra("Email",email)
+                startActivity(intent)
+            } else {
+                //Registered
+                val intent = Intent(this, HomeActivity::class.java)
+                //intent.putExtra("Email",email)
+                startActivity(intent)
 
-            override fun onFinish() {
-                if (preferences.getString("email", "") == "") {
-                    //Not registered
-                    val intent = Intent(this@SplashActivity, LoginActivity::class.java)
-                    //intent.putExtra("Email",email)
-                    startActivity(intent)
-                } else {
-                    //Registered
-                    val intent = Intent(this@SplashActivity, HomeActivity::class.java)
-                    //intent.putExtra("Email",email)
-                    startActivity(intent)
-
-                }
             }
         }
-        timer.start()
 
     }
 }
